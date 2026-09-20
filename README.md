@@ -8,8 +8,7 @@ Ouvrir `l9q-vertical-offset.html` dans un navigateur, ou via GitHub Pages (voir 
 
 ## Page
 
-[Après push sur `main` :
-`Settings > Pages > Deploy from a branch > main / (root)` → `https://<user>.github.io/<repo>/`](https://alecgib77.github.io/hisense-l9q-offset/)
+(https://alecgib77.github.io/hisense-l9q-offset/)
 
 ## Dev avec opencode
 
