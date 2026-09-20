@@ -8,7 +8,7 @@ Ouvrir `l9q-vertical-offset.html` dans un navigateur, ou via GitHub Pages (voir 
 
 ## Page
 
-(https://alecgib77.github.io/hisense-l9q-offset/)
+https://alecgib77.github.io/hisense-l9q-offset/
 
 ## Dev avec opencode
 
