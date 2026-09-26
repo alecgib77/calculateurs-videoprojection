@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%234d9dff'/%3E%3C/svg%3E">
+<title>Optoma ZU820T — Calculateur de projection</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#1a1e26; --card2:#222836; --text:#f2f4f8; --muted:#a7b0c0;
+    --border:#2b3242; --input-bg:#10141b; --input-border:#333c50; --seg-bg:#121722; --seg-active:#2a3449;
+    --accent:#4d9dff; --accent2:#7c5cff; --warn:#ffb020; --danger:#ff5d5d; --ok:#2bd67b; --on-accent:#04182f;
+    --svg-bg:#0b0e13; --svg-border:#2a3346;
+    --warn-bg:#27200f; --ok-bg:#0e2418; --err-bg:#2a1111; --note-bg:#141a24; --note-border:#3a445a;
+    --highlight-bg:#0f1d31; --apply-bg:#17263a; --apply-border:#3b587a; --apply-color:#cfe3ff; --code-bg:#121722;
+    --radius:16px;
+  }
+  html[data-theme="light"]{
+    --bg:#f3f5f9; --card:#ffffff; --card2:#eef2f7; --text:#111827; --muted:#5b6472;
+    --border:#e3e8ef; --input-bg:#ffffff; --input-border:#cbd5e1; --seg-bg:#eef2f7; --seg-active:#dbe4f0;
+    --accent:#2563eb; --accent2:#6d28d9; --warn:#b45309; --danger:#dc2626; --ok:#047857; --on-accent:#ffffff;
+    --svg-bg:#ffffff; --svg-border:#dbe2ea;
+    --warn-bg:#fef3c7; --ok-bg:#d1fae5; --err-bg:#fee2e2; --note-bg:#eef2f7; --note-border:#cbd5e1;
+    --highlight-bg:#eaf2ff; --apply-bg:#e8f0fe; --apply-border:#a9c3ee; --apply-color:#1e40af; --code-bg:#eef2f7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+  header{padding:22px 16px 8px;max-width:760px;margin:0 auto}
+  header h1{font-size:1.4rem;margin:0 0 4px}
+  header p{margin:0;color:var(--muted);font-size:.95rem}
+  main{max-width:760px;margin:0 auto;padding:12px 16px 56px;display:flex;flex-direction:column;gap:14px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:0 1px 2px rgba(15,23,42,.05)}
+  .card h2{font-size:.95rem;margin:0 0 12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  label{font-size:.9rem;color:var(--muted)}
+  input[type=number],select{width:100%;padding:11px;border-radius:12px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:1.05rem}
+  input[type=range]{width:100%;height:44px;accent-color:var(--accent)}
+  .seg{display:flex;background:var(--seg-bg);border-radius:12px;padding:4px;gap:4px}
+  .seg button{flex:1;padding:10px 6px;border:0;border-radius:8px;background:transparent;color:var(--muted);font-size:.92rem;cursor:pointer;white-space:nowrap}
+  .seg button.active{background:var(--seg-active);color:var(--text);font-weight:700}
+  .presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .presets button{flex:1 1 auto;min-width:56px;padding:9px 6px;border-radius:999px;border:1px solid var(--input-border);background:var(--seg-bg);color:var(--text);font-size:.9rem;cursor:pointer}
+  .presets button.active{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:700}
+  .big{font-size:1.9rem;font-weight:800;margin:2px 0;line-height:1.15}
+  .big small{font-size:1rem;font-weight:600;color:var(--muted)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  @media(max-width:520px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}}
+  .kpi{background:var(--card2);border-radius:12px;padding:12px}
+  .kpi .u{font-size:.82rem;color:var(--muted)}
+  .kpi .v{font-size:1.3rem;font-weight:800;margin-top:2px}
+  .kpi small{color:var(--muted);display:block;margin-top:3px;font-size:.78rem}
+  .highlight{border:2px solid var(--accent);background:var(--highlight-bg)}
+  .warnbox{border-left:4px solid var(--warn);background:var(--warn-bg);padding:10px 12px;border-radius:8px;font-size:.9rem;margin-top:10px}
+  .okbox{border-left:4px solid var(--ok);background:var(--ok-bg);padding:10px 12px;border-radius:8px;font-size:.9rem;margin-top:10px}
+  .errbox{border-left:4px solid var(--danger);background:var(--err-bg);padding:10px 12px;border-radius:8px;font-size:.9rem;margin-top:10px}
+  .note{border-left:4px solid var(--note-border);background:var(--note-bg);padding:10px 12px;border-radius:8px;font-size:.86rem;color:var(--muted);margin-top:10px}
+  svg{width:100%;height:auto;background:var(--svg-bg);border-radius:12px;border:1px solid var(--svg-border);display:block}
+  .foot{color:var(--muted);font-size:.8rem}
+  button.copy{padding:12px 14px;border-radius:10px;border:0;background:var(--accent2);color:#fff;font-weight:700;cursor:pointer;width:100%;font-size:1rem}
+  button.apply{padding:8px 11px;border:1px solid var(--apply-border);border-radius:8px;background:var(--apply-bg);color:var(--apply-color);font-weight:650;cursor:pointer;font-size:.82rem;margin-top:7px}
+  .gauge{position:relative;height:34px;margin:10px 0 6px}
+  .gauge .track{position:absolute;inset:0;background:var(--seg-bg);border:1px solid var(--border);border-radius:999px}
+  .gauge .band{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;opacity:.85}
+  .gauge .mark{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--warn)}
+  .gauge .lab{position:absolute;top:38px;transform:translateX(-50%);font-size:.72rem;color:var(--warn);white-space:nowrap}
+  .spacer{height:26px}
+  .rowflex{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  #themeSeg{width:auto;flex:0 0 auto}
+  #themeSeg button{flex:0 0 auto;padding:7px 12px;font-size:.85rem}
+  code{background:var(--code-bg);padding:1px 5px;border-radius:5px;font-size:.85em}
+</style>
+</head>
+<body>
+<header>
+  <div class="rowflex" style="align-items:flex-start">
+    <h1 style="flex:1 1 320px">Optoma ZU820T — Calculateur de projection</h1>
+    <div class="seg" id="themeSeg" role="group" aria-label="Thème">
+      <button data-theme="light">Clair</button>
+      <button data-theme="dark">Sombre</button>
+    </div>
+  </div>
+    <p>Installation plafonnière, dimensions d'écran, recul et contrôle du faisceau sous l'imposte. 100 % hors-ligne.</p>
+</header>
+<main>
+
+  <!-- 1 · Taille d'image -->
+  <section class="card">
+    <h2>1 · Toile 16:10 — dimensions de l'image</h2>
+    <p class="foot" style="margin-top:-6px">Dimensions initiales de l'écran ORION TENS : 262 × 164 cm. Modifie la diagonale, la largeur ou la hauteur pour recalculer toute l'installation.</p>
+    <div class="rowflex">
+      <label for="diag">Diagonale (curseur) : <strong id="diagLabel" style="color:#fff">126″</strong></label>
+      <span id="dimLabel" style="color:var(--muted);font-size:.88rem"></span>
+    </div>
+    <input id="diag" type="range" min="50" max="300" step="1" value="126">
+    <div class="presets" id="presets">
+      <button data-d="121.7" class="active">262 × 164 cm</button>
+      <button data-d="100">100″</button>
+      <button data-d="120">120″</button>
+      <button data-d="150">150″</button>
+      <button data-d="180">180″</button>
+      <button data-d="200">200″</button>
+      <button data-d="250">250″</button>
+      <button data-d="300">300″</button>
+    </div>
+
+    <div class="spacer"></div>
+    <label>Saisie directe (les 3 champs sont liés) :</label>
+    <div class="grid3" style="margin-top:6px">
+      <div><label for="diagNum">Diagonale (″)</label><input id="diagNum" type="number" inputmode="decimal" min="50" max="300" step="0.5" value="126"></div>
+      <div><label for="widthNum">Largeur (cm)</label><input id="widthNum" type="number" inputmode="decimal" min="1" step="1" value="262"></div>
+      <div><label for="heightNum">Hauteur (cm)</label><input id="heightNum" type="number" inputmode="decimal" min="1" step="1" value="164"></div>
+    </div>
+    <p class="foot" id="rangeWarn" style="display:none;color:var(--warn)"></p>
+    <p class="foot" id="panelNote" style="margin-top:8px"></p>
+  </section>
+
+  <!-- 2 · Distance -->
+  <section class="card highlight">
+    <h2 style="color:var(--accent)">2 · Distance de projection nécessaire</h2>
+    <div class="big" id="distBig">—</div>
+    <div class="foot" id="distSub"></div>
+    <div class="gauge" id="gauge">
+      <div class="track"></div>
+      <div class="band" id="gBand"></div>
+      <div class="mark" id="gMarkMin"></div>
+      <div class="mark" id="gMarkMax"></div>
+      <div class="lab" id="gLabMin">1,33 m</div>
+      <div class="lab" id="gLabMax">13,06 m</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="grid2">
+      <div><label for="roomDepth">Profondeur de la salle (mur → mur, cm)</label><input id="roomDepth" type="number" inputmode="decimal" min="100" step="1" value="756"></div>
+      <div><label for="fasciaDepth">Imposte : mur côté meuble → façade (cm)</label><input id="fasciaDepth" type="number" inputmode="decimal" min="0" step="1" value="60"></div>
+    </div>
+    <div class="spacer"></div>
+    <div class="grid3">
+      <div class="kpi"><div class="u">Zoom max (image la plus proche)</div><div class="v" id="dMin">—</div><small>Ratio 1,25:1 · lentille → toile</small></div>
+      <div class="kpi"><div class="u">Zoom min (image la plus loin)</div><div class="v" id="dMax">—</div><small>Ratio 2,0:1 · lentille → toile</small></div>
+      <div class="kpi"><div class="u">Arrière du projecteur → toile</div><div class="v" id="dBack">—</div><small>Estimation : distance lentille + profondeur du boîtier (43,3 cm)</small></div>
+    </div>
+    <div class="spacer"></div>
+    <div class="grid2">
+      <div class="kpi"><div class="u">Lentille → mur du fond</div><div class="v" id="lensToWall">—</div><small id="lensToWallSub">—</small></div>
+      <div class="kpi"><div class="u">Arrière du projecteur → mur du fond</div><div class="v" id="projRearToWall">—</div><small id="projRearToWallSub">—</small></div>
+    </div>
+    <div id="distWarn"></div>
+  </section>
+
+  <!-- 3 · Depuis une distance -->
+  <section class="card">
+    <h2>3 · L'inverse : je connais ma distance</h2>
+    <label for="distInput">Distance lentille → écran (m)</label>
+    <input id="distInput" type="number" inputmode="decimal" min="0.5" step="0.1" value="4">
+    <div class="spacer"></div>
+    <div class="big" id="sizeBig" style="font-size:1.5rem">—</div>
+    <div class="foot" id="sizeSub"></div>
+    <div class="spacer"></div>
+    <div class="grid3">
+      <div class="kpi"><div class="u">Diagonale mini (zoom max)</div><div class="v" id="sDmin">—</div></div>
+      <div class="kpi"><div class="u">Diagonale maxi (zoom min)</div><div class="v" id="sDmax">—</div></div>
+      <div class="kpi"><div class="u">Largeur mini → maxi</div><div class="v" id="sW" style="font-size:1.05rem">—</div></div>
+    </div>
+    <div id="sizeWarn"></div>
+  </section>
+
+  <!-- 4 · Position plafonnière / imposte -->
+  <section class="card">
+    <h2>4 · Plafond, imposte &amp; passage du faisceau</h2>
+    <div class="grid3">
+      <div><label for="ceilH">Hauteur sous plafond (cm)</label><input id="ceilH" type="number" inputmode="decimal" min="100" step="1" value="275"></div>
+      <div><label for="soffitH">Hauteur de l'imposte sous plafond (cm)</label><input id="soffitH" type="number" inputmode="decimal" min="0" step="0.5" value="20"></div>
+      <div><label for="recess">Retrait toile derrière façade (cm)</label><input id="recess" type="number" inputmode="decimal" min="0" step="0.5" value="5"></div>
+      <div><label for="lensDrop">Plafond → axe optique (cm)</label><input id="lensDrop" type="number" inputmode="decimal" min="0" step="1" value="20"></div>
+      <div><label for="pantographCourse">Course du pantographe (référence)</label>
+        <select id="pantographCourse">
+          <option value="">Non précisée</option>
+          <option value="1">1 m — SVP0501 (replié 16 cm)</option>
+          <option value="2">2 m — SVP0502 (replié 20 cm)</option>
+          <option value="3">3 m — SVP0503 (replié 24 cm)</option>
+          <option value="4">4 m — SVP0504 (replié 28 cm)</option>
+        </select>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="grid2">
+      <div class="kpi"><div class="u">Lentille → toile (ratio choisi)</div><div class="v" id="selectedThrow">—</div><small id="selectedRatioSub">—</small></div>
+      <div class="kpi"><div class="u">Arrière du projecteur → toile</div><div class="v" id="selectedBack">—</div><small>Au ratio choisi · approximation avec boîtier de 43,3 cm</small></div>
+      <div class="kpi"><div class="u">Plafond → lentille</div><div class="v" id="lensDropReadout">—</div><small id="lensHeightSub">—</small></div>
+      <div class="kpi"><div class="u">Haut de toile / sous-face imposte</div><div class="v" id="screenTopReadout">—</div><small>sol → haut de toile, aligné à la base de l'imposte</small></div>
+      <div class="kpi"><div class="u">Bas de toile</div><div class="v" id="screenBottomReadout">—</div><small>sol → bas de l'image projetée</small></div>
+      <div class="kpi"><div class="u">Lens shift vertical requis</div><div class="v" id="requiredShift">—</div><small>limite constructeur ±55 %</small></div>
+      <div class="kpi"><div class="u">Distance plafond → axe optique minimale</div><div class="v" id="recommendedDrop">—</div><small id="recommendedDropSub">Position la plus proche du plafond autorisée</small><button class="apply" id="applyMinDrop" type="button">Appliquer cette position</button></div>
+      <div class="kpi"><div class="u">Plage d'axe optique compatible</div><div class="v" id="lensDropRange">—</div><small id="lensDropRangeSub">Du dégagement demandé à la limite haute du lens shift</small></div>
+      <div class="kpi"><div class="u">Plafond → platine basse du pantographe</div><div class="v" id="pantographNeed">—</div><small id="pantographSub">Axe optique supposé au milieu du boîtier</small></div>
+      <div class="kpi"><div class="u">Poids du vidéoprojecteur / charge support</div><div class="v">14 kg / 30 kg</div><small>Le pantographe est donné pour 30 kg maximum</small></div>
+    </div>
+    <div id="vertInfo"></div>
+  </section>
+
+  <!-- 5 · Schéma -->
+  <section class="card">
+    <h2>5 · Schéma (vue de côté) &amp; zoom</h2>
+    <svg id="schema" viewBox="0 0 880 384" aria-label="Schéma de côté"></svg>
+    <div class="spacer"></div>
+    <div class="rowflex">
+      <label for="ratioSlider">Ratio de projection (règle le zoom)</label>
+      <strong id="ratioLabel" style="color:#fff">1,50:1</strong>
+    </div>
+    <input id="ratioSlider" type="range" min="0" max="100" step="1" value="67">
+    <div class="rowflex" style="margin-top:-10px">
+      <span class="foot">2,00:1 — zoom min · image la plus loin</span>
+      <span class="foot">1,25:1 — zoom max · image la plus proche</span>
+    </div>
+    <div class="foot" id="ratioSub" style="margin-top:6px"></div>
+    <div class="spacer"></div>
+    <p class="foot" id="schemaCap"></p>
+    <div class="rowflex" style="justify-content:flex-start;margin-top:10px">
+      <button class="apply" id="btnSvg" type="button">Exporter le schéma (SVG)</button>
+      <button class="apply" id="btnPng" type="button">Exporter en PNG</button>
+    </div>
+  </section>
+
+  <!-- 6 · Récap -->
+  <section class="card">
+    <button class="copy" id="btnCopy">Copier le récap</button>
+    <p class="foot" id="src" style="margin-top:12px">
+      <strong>Sources :</strong> fiche produit Optoma ZU820T + manuel utilisateur (sections « Lens Shift Range » / offset natif) · fiche écran <a href="https://www.dataor.fr/Documents/FichesTechniques/01-EcransMoteur/ORION/FR/FT_FR_ORION_TENS.pdf" target="_blank" rel="noopener">ORION TENS</a> · fiche <a href="https://www.dataor.fr/Documents/FichesTechniques/08-SupportsMotorises/MINI_PANTOGRAPHE_30/FR/FT_FR_MINI_PANTOGRAPHE_30.pdf" target="_blank" rel="noopener">MINI PANTOGRAPHE 30</a>.<br>
+      Ratio de projection <code>1,25–2,0:1</code> (distance ÷ largeur d'image), zoom optique <code>1,6×</code> motorisé.
+      Distance officielle <code>1,33–13,06 m</code>, écran <code>50–300″</code>. Lens shift <code>±55 %</code> vertical / <code>±25 %</code> horizontal
+      (par rapport à la position neutre, offset natif <code>50 %</code> : le centre optique est au centre de l'image).<br>
+      <strong>Boîtier :</strong> 486 × 432,5 × 176 mm sans pieds (185,5 mm avec pieds) · 14 kg · 1920×1200 · 8800 lumens · laser DuraCore. L'axe optique est supposé au milieu du boîtier pour estimer la course du pantographe.<br>
+      <strong>Pantographe :</strong> la fiche indique 1 / 2 / 3 / 4 m de course (SVP0501–SVP0504), charge maximale 30 kg ; sélectionne la référence exacte dans le champ.
+    </p>
+  </section>
+</main>
+
+<script>
+/* ---------- Constantes constructeur (vérifiées) ---------- */
+const TR_MIN = 1.25, TR_MAX = 2.0;          // ratio de projection (distance / largeur image)
+const SHIFT_V = 0.55, SHIFT_H = 0.25;       // lens shift : ±55 % de H (vertical), ±25 % de W (horizontal)
+const NATIVE_OFFSET = 0.50;                  // offset Optoma 50 % : axe optique au milieu de l'image en position neutre
+const DIST_MIN = 1.33, DIST_MAX = 13.06;    // distance officielle (m)
+const DIAG_MIN = 50, DIAG_MAX = 300;        // diagonale officielle (pouces)
+const PROJ_DEPTH = 0.4325;                  // profondeur du boîtier (m)
+const PROJ_W = 486, PROJ_D = 432.5, PROJ_H = 176, PROJ_H_FEET = 185.5, PROJ_KG = 14;
+const PANEL_R = 16/10;                      // natif 16:10
+const PANTOGRAPH_MODELS = [
+  {course:1, sku:'SVP0501', folded:0.16, max:1},
+  {course:2, sku:'SVP0502', folded:0.20, max:2},
+  {course:3, sku:'SVP0503', folded:0.24, max:3},
+  {course:4, sku:'SVP0504', folded:0.28, max:4}
+];
+
+const ASPECTS = { '16:10': {r: 16/10}, '16:9': {r: 16/9}, '4:3': {r: 4/3} };
+
+/* ---------- Conversions ---------- */
+// Diagonale (m) -> {W,H} (m) pour un format donné
+function diagToWH(Dm, aspect){
+  const r = ASPECTS[aspect].r;
+  const H = Dm / Math.hypot(r, 1);
+  return { W: r * H, H: H };
+}
+// Taille d'image (m) -> largeur du panneau projeté (m).
+// Le ratio de projection s'applique à la LARGEUR de l'image native.
+// 16:10 et 16:9 occupent toute la largeur du panneau ; le 4:3 occupe toute la hauteur (bandes latérales).
+function panelFromImage(Dm, aspect){
+  const { W, H } = diagToWH(Dm, aspect);
+  if (aspect === '4:3') return H * PANEL_R;   // remplit la hauteur du panneau
+  return W;                                   // remplit la largeur du panneau
+}
+// Largeur du panneau (m) -> {W,H,D} de l'image affichée (m) pour un format donné
+function imageFromPanel(panelW, aspect){
+  if (aspect === '4:3'){
+    const H = panelW / PANEL_R;
+    const W = H * (4/3);
+    return { W, H, D: Math.hypot(W, H) };
+  }
+  const r = ASPECTS[aspect].r;
+  const W = panelW;
+  const H = W / r;
+  return { W, H, D: Math.hypot(W, H) };
+}
+
+/* ---------- Formatage ---------- */
+const $ = id => document.getElementById(id);
+const m2cm = x => x * 100;
+const inOf = m => m / 0.0254;
+const fmtM  = x => x.toFixed(2).replace('.', ',') + ' m';
+const fmtCm = x => m2cm(x).toFixed(0) + ' cm';
+const fmtCm1= x => m2cm(x).toFixed(1).replace('.', ',') + ' cm';
+const fmtIn = x => inOf(x).toFixed(0) + '″';
+const fmtIn1= x => inOf(x).toFixed(1).replace('.', ',') + '″';
+const num = v => parseFloat(String(v).replace(',', '.'));
+
+/* ---------- Palette du schéma selon le thème ---------- */
+const SVG_THEMES = {
+  dark: {
+    bg:'#0b0e13', stroke:'#0b0e13', wall:'#6b7688', floor:'#5a657a', ceil:'#3a445a',
+    label:'#a7b0c0', beam:'#4d9dff', screen:'#4d9dff',
+    imposteFill:'#76512b', imposteText:'#ffcf7a', warn:'#ffb020',
+    projFill:'#2a3449', projArm:'#71809a', lens:'#c8ffe9',
+    dim1:'#8fc0ff', dim2:'#7c5cff', dim2Text:'#c3b6ff', dim3:'#2bd67b', dim3Text:'#7ff0b4',
+    ok:'#2bd67b', bad:'#ff5d5d'
+  },
+  light: {
+    bg:'#ffffff', stroke:'#ffffff', wall:'#94a3b8', floor:'#94a3b8', ceil:'#cbd5e1',
+    label:'#475569', beam:'#2563eb', screen:'#2563eb',
+    imposteFill:'#fde3c4', imposteText:'#92400e', warn:'#b45309',
+    projFill:'#dde6f2', projArm:'#94a3b8', lens:'#047857',
+    dim1:'#1d4ed8', dim2:'#6d28d9', dim2Text:'#6d28d9', dim3:'#047857', dim3Text:'#047857',
+    ok:'#047857', bad:'#dc2626'
+  }
+};
+
+/* ---------- État ---------- */
+const state = { aspect: '16:10', diagIn: 121.7, theme: 'light' };
+let syncing = false;
+
+/* ---------- Taille d'image (champs liés) ---------- */
+const diagEl = $('diag'), diagNumEl = $('diagNum'), widthEl = $('widthNum'), heightEl = $('heightNum');
+
+function setSize(D, from){
+  if (syncing) return;
+  D = Math.min(DIAG_MAX, Math.max(DIAG_MIN, D));
+  syncing = true;
+  state.diagIn = D;
+  diagEl.value = Math.round(D);
+  diagNumEl.value = Math.round(D * 10) / 10;
+  const Dm = D * 0.0254;
+  const { W, H } = diagToWH(Dm, state.aspect);
+  if (from !== 'w') widthEl.value  = Math.round(m2cm(W) * 10) / 10;
+  if (from !== 'h') heightEl.value = Math.round(m2cm(H) * 10) / 10;
+  syncing = false;
+  syncPresets();
+  calc();
+}
+
+function syncPresets(){
+  document.querySelectorAll('#presets button').forEach(b =>
+    b.classList.toggle('active', Math.round(+b.dataset.d * 10) === Math.round(state.diagIn * 10)));
+}
+
+document.querySelectorAll('#presets button').forEach(b => {
+  b.onclick = () => setSize(+b.dataset.d);
+});
+diagEl.oninput      = () => setSize(+diagEl.value);
+diagNumEl.oninput   = () => { const v = num(diagNumEl.value); if (isFinite(v) && v > 0) setSize(v); };
+widthEl.oninput     = () => {
+  const v = num(widthEl.value); if (!isFinite(v) || v <= 0) return;
+  const r = ASPECTS[state.aspect].r;
+  const Wm = v / 100, Hm = Wm / r;
+  setSize(Math.hypot(Wm, Hm) / 0.0254, 'w');
+};
+heightEl.oninput    = () => {
+  const v = num(heightEl.value); if (!isFinite(v) || v <= 0) return;
+  const r = ASPECTS[state.aspect].r;
+  const Hm = v / 100, Wm = Hm * r;
+  setSize(Math.hypot(Wm, Hm) / 0.0254, 'h');
+};
+
+['ceilH', 'soffitH', 'recess', 'lensDrop', 'ratioSlider', 'distInput', 'pantographCourse', 'roomDepth', 'fasciaDepth'].forEach(id => {
+  $(id).addEventListener('input', calc);
+});
+
+$('applyMinDrop').onclick = () => {
+  const r = calc();
+  if (isFinite(r.recommendedDrop)){
+    $('lensDrop').value = (r.recommendedDrop * 100).toFixed(1);
+    calc();
+  }
+};
+
+/* ---------- Calcul principal ---------- */
+function calc(){
+  const aspect = state.aspect;
+  const Dm = state.diagIn * 0.0254;
+  const { W, H } = diagToWH(Dm, aspect);
+  const panelW = panelFromImage(Dm, aspect);
+  const dMin = TR_MIN * panelW, dMax = TR_MAX * panelW;
+
+  // Entrées de l'installation (lues en amont : la section 2 en a besoin).
+  const ceil = Math.max(0, num($('ceilH').value) || 0) / 100;
+  const soffit = Math.max(0, num($('soffitH').value) || 0) / 100;
+  const recess = Math.max(0, num($('recess').value) || 0) / 100;
+  const lensDrop = Math.max(0, num($('lensDrop').value) || 0) / 100;
+  const roomDepth = Math.max(0, num($('roomDepth').value) || 0) / 100;
+  const fasciaDepth = Math.max(0, num($('fasciaDepth').value) || 0) / 100;
+  // Slider sous le schéma : 0 → 2,00:1 (zoom min, à gauche) ; 100 → 1,25:1 (zoom max, à droite).
+  let ratio = TR_MAX - (num($('ratioSlider').value) || 0) * ((TR_MAX - TR_MIN) / 100);
+  if (!isFinite(ratio)) ratio = 1.5;
+  ratio = Math.min(TR_MAX, Math.max(TR_MIN, ratio));
+  $('ratioLabel').textContent = ratio.toFixed(2).replace('.', ',') + ':1';
+  const selectedD = ratio * panelW;
+  // Plan de toile : façade de l'imposte moins le retrait de la toile.
+  const screenFromWall = Math.max(0, fasciaDepth - recess);
+
+  /* -- Section 1 : libellés -- */
+  $('diagLabel').textContent = (Math.round(state.diagIn * 10) / 10).toString().replace('.', ',') + '″';
+  $('dimLabel').textContent  = fmtCm(W) + ' × ' + fmtCm(H);
+
+  const rw = $('rangeWarn');
+  if (state.diagIn < DIAG_MIN || state.diagIn > DIAG_MAX){
+    rw.style.display = 'block';
+    rw.textContent = '⚠️ Hors plage officielle 50–300″ : à vérifier sur place.';
+  } else { rw.style.display = 'none'; }
+
+  // Note panneau natif (utile si l'on projette du 16:9 ou 4:3)
+  $('panelNote').textContent = 'Format natif du projecteur et de la toile : 16:10. La diagonale se recalcule à partir des dimensions saisies.';
+
+  /* -- Section 2 : distance -- */
+  $('distBig').innerHTML = fmtM(dMin) + ' <small>→</small> ' + fmtM(dMax);
+  $('distSub').textContent = 'de la lentille à l\'écran (zoom 1,25:1 → 2,0:1), pour une image ' +
+    fmtCm(W) + ' × ' + fmtCm(H) + ' (' + Math.round(state.diagIn) + '″, ' + aspect + ')';
+  $('dMin').textContent = fmtM(dMin);
+  $('dMax').textContent = fmtM(dMax);
+  $('dBack').textContent = fmtM(dMin + PROJ_DEPTH) + ' → ' + fmtM(dMax + PROJ_DEPTH);
+
+  // Placement dans la salle : distances au mur du fond (derrière le projecteur).
+  // Le plan de toile est à (profondeur de l'imposte − retrait de la toile) du mur du fond.
+  const lensToWallNear = roomDepth - screenFromWall - dMax;   // image la plus loin -> lentille la plus reculée
+  const lensToWallFar  = roomDepth - screenFromWall - dMin;   // image la plus proche -> lentille la plus avancée
+  const rearToWallNear = lensToWallNear - PROJ_DEPTH;
+  const rearToWallFar  = lensToWallFar - PROJ_DEPTH;
+  const lensToWallSelected = roomDepth - screenFromWall - selectedD;
+  const rearToWallSelected = lensToWallSelected - PROJ_DEPTH;
+  $('lensToWall').textContent = fmtM(lensToWallNear) + ' → ' + fmtM(lensToWallFar);
+  $('lensToWallSub').textContent = 'Salle de ' + fmtM(roomDepth) + ' · plan de toile à ' + fmtCm(screenFromWall) + ' du mur côté meuble';
+  $('projRearToWall').textContent = fmtM(rearToWallNear) + ' → ' + fmtM(rearToWallFar);
+  $('projRearToWallSub').textContent = 'Toile ' + fmtCm1(recess) + ' en retrait derrière la façade (à ' + fmtCm(fasciaDepth) + ' du mur côté meuble)';
+
+  // Jauge
+  const gMax = Math.max(DIST_MAX, dMax) * 1.06;
+  const pct = x => (x / gMax) * 100;
+  $('gBand').style.left  = Math.max(0, pct(dMin)) + '%';
+  $('gBand').style.width = Math.min(100, pct(dMax) - Math.max(0, pct(dMin))) + '%';
+  $('gMarkMin').style.left = pct(DIST_MIN) + '%';
+  $('gMarkMax').style.left = pct(DIST_MAX) + '%';
+  $('gLabMin').style.left = pct(DIST_MIN) + '%';
+  $('gLabMax').style.left = pct(DIST_MAX) + '%';
+
+  const dw = $('distWarn');
+  let wmsg = '';
+  if (dMax < DIST_MIN) wmsg = '⚠️ La distance nécessaire (' + fmtM(dMax) + ' au plus loin) est inférieure au minimum officiel de 1,33 m : agrandis l\'image ou éloigne le projecteur.';
+  else if (dMin > DIST_MAX) wmsg = '⚠️ La distance nécessaire (' + fmtM(dMin) + ' au plus près) dépasse le maximum officiel de 13,06 m : réduis l\'image ou rapproche le projecteur.';
+  else if (dMin < DIST_MIN) wmsg = 'ℹ️ Le début de plage (' + fmtM(dMin) + ') est sous 1,33 m : utilise le zoom plutôt vers 2,0:1 pour rester dans la plage officielle.';
+  else if (dMax > DIST_MAX) wmsg = 'ℹ️ Le haut de plage (' + fmtM(dMax) + ') dépasse 13,06 m : le zoom ne couvrira pas toute la course.';
+  if (isFinite(rearToWallNear)){
+    if (rearToWallNear < 0){
+      wmsg += (wmsg ? ' ' : '') + '⛔ Profondeur de salle insuffisante : au zoom max, l\'arrière du projecteur dépasserait le mur du fond de ' + fmtCm(-rearToWallNear) + '.';
+    } else if (rearToWallNear < 0.05){
+      wmsg += (wmsg ? ' ' : '') + '⚠️ Il ne reste que ' + fmtCm1(rearToWallNear) + ' derrière le projecteur au zoom max : prévois de la place pour les câbles et la ventilation.';
+    }
+  }
+  dw.innerHTML = wmsg ? '<div class="warnbox">' + wmsg + '</div>' : '';
+
+  /* -- Section 3 : depuis une distance -- */
+  const d = num($('distInput').value);
+  const sw = $('sizeWarn');
+  if (isFinite(d) && d > 0){
+    const panelMax = d / TR_MIN;   // zoom mini -> image la plus grande
+    const panelMin = d / TR_MAX;   // zoom maxi -> image la plus petite
+    const big = imageFromPanel(panelMax, aspect);
+    const small = imageFromPanel(panelMin, aspect);
+    $('sizeBig').innerHTML = fmtIn1(small.D) + ' <small>→</small> ' + fmtIn1(big.D);
+    $('sizeSub').textContent = 'image possible à ' + fmtM(d) + ' (' + fmtCm(big.W) + ' × ' + fmtCm(big.H) +
+      ' au maximum, ' + fmtCm(small.W) + ' × ' + fmtCm(small.H) + ' au minimum)';
+    $('sDmin').textContent = fmtIn1(small.D);
+    $('sDmax').textContent = fmtIn1(big.D);
+    $('sW').textContent = fmtCm(small.W) + ' → ' + fmtCm(big.W);
+    let sm = '';
+    if (d < DIST_MIN) sm = '⚠️ Sous la distance minimale officielle (1,33 m).';
+    else if (d > DIST_MAX) sm = '⚠️ Au-delà de la distance maximale officielle (13,06 m).';
+    else if (big.D / 0.0254 > DIAG_MAX) sm = 'ℹ️ La plus grande image possible (' + fmtIn1(big.D) + ') dépasse 300″ : reste au-dessus du zoom 1,25:1.';
+    sw.innerHTML = sm ? '<div class="warnbox">' + sm + '</div>' : '<div class="okbox">✅ Distance dans la plage officielle (1,33–13,06 m).</div>';
+  } else {
+    $('sizeBig').textContent = '—'; $('sizeSub').textContent = '';
+    $('sDmin').textContent = '—'; $('sDmax').textContent = '—'; $('sW').textContent = '—';
+    sw.innerHTML = '';
+  }
+
+  /* -- Section 4 : installation plafonnière et dégagement de l'imposte -- */
+  const topImage = ceil - soffit;
+  const bottomImage = topImage - H;
+  const centerImage = topImage - H/2;
+  const lensZ = ceil - lensDrop;
+  // L'offset natif 50 % place l'axe optique sur le centre de l'image au neutre.
+  const neutralCenter = lensZ + (0.5 - NATIVE_OFFSET) * H;
+  const shiftPct = H > 0 ? ((centerImage - neutralCenter) / H) * 100 : NaN;
+  const shiftOK = Math.abs(shiftPct) <= SHIFT_V * 100 + 1e-7;
+  // À la façade (5 cm devant le plan de toile), le rayon vers le coin supérieur
+  // est interpolé entre le centre de lentille et le haut de l'image.
+  const beamGap = recess > 0 ? (topImage - lensZ) * (recess / selectedD) : 0;
+  const beamGapNear = recess > 0 ? (topImage - lensZ) * (recess / dMin) : 0;
+  const beamGapFar = recess > 0 ? (topImage - lensZ) * (recess / dMax) : 0;
+  // Bornes de descente de l'axe optique : limite mécanique du lens shift (±55 %),
+  // impossibilité de descendre l'axe sous le sol, et obligation que le faisceau ne
+  // soit pas coupé par l'imposte. Cette contrainte de faisceau est purement
+  // géométrique : aucune « marge » n'est exposée à l'utilisateur.
+  const shiftDropMin = ceil - centerImage - SHIFT_V * H;
+  const shiftDropMax = ceil - centerImage + SHIFT_V * H;
+  const maxDrop = Math.max(0, Math.min(ceil, shiftDropMax));
+  const minDrop = Math.max(shiftDropMin, soffit);
+  const dropFeasible = minDrop <= maxDrop + 1e-9;
+  const recommendedDrop = dropFeasible ? minDrop : maxDrop;
+  const suggestedDrop = recommendedDrop;
+  const suggestedShiftPct = H > 0 ? ((centerImage - (ceil - suggestedDrop + (0.5 - NATIVE_OFFSET) * H)) / H) * 100 : NaN;
+  const bodyHalfHeight = (PROJ_H / 1000) / 2;
+  // VP à l'endroit posé sur la platine basse : celle-ci est sous le centre optique.
+  const pantographNeed = Math.max(0, suggestedDrop + bodyHalfHeight);
+  const pantographCurrent = Math.max(0, lensDrop + bodyHalfHeight);
+  const pantographCourse = num($('pantographCourse').value);
+  const selectedPantograph = PANTOGRAPH_MODELS.find(model => model.course === pantographCourse);
+  const minimumPantograph = PANTOGRAPH_MODELS.find(model => pantographNeed >= model.folded && pantographNeed <= model.max);
+  const recommendedShiftPct = H > 0 ? ((centerImage - (ceil - suggestedDrop + (0.5 - NATIVE_OFFSET) * H)) / H) * 100 : NaN;
+
+  $('selectedThrow').textContent = fmtM(selectedD);
+  $('selectedRatioSub').textContent = 'Ratio ' + ratio.toFixed(2).replace('.', ',') + ':1 · plage complète ' + fmtM(dMin) + ' → ' + fmtM(dMax);
+  $('selectedBack').textContent = fmtM(selectedD + PROJ_DEPTH);
+  $('lensDropReadout').textContent = fmtCm1(lensDrop);
+  $('lensHeightSub').textContent = 'Axe optique à ' + fmtCm1(lensZ) + ' du sol · axe supposé au milieu du boîtier';
+  $('screenTopReadout').textContent = fmtCm1(topImage);
+  $('screenBottomReadout').textContent = fmtCm1(bottomImage);
+  $('requiredShift').textContent = (shiftPct >= 0 ? '+' : '') + shiftPct.toFixed(1).replace('.', ',') + ' % (' + (shiftPct > 0 ? 'vers le haut' : shiftPct < 0 ? 'vers le bas' : 'neutre') + ')';
+  $('recommendedDrop').textContent = dropFeasible ? fmtCm1(recommendedDrop) : 'Impossible';
+  $('recommendedDropSub').textContent = dropFeasible
+    ? 'Position la plus proche du plafond autorisée · shift associé : ' + recommendedShiftPct.toFixed(1).replace('.', ',') + ' %'
+    : 'Aucune position ne satisfait lens shift et passage du faisceau sous l\'imposte';
+  $('lensDropRange').textContent = dropFeasible
+    ? fmtCm1(recommendedDrop) + ' → ' + fmtCm1(maxDrop)
+    : 'Non atteignable';
+  $('lensDropRangeSub').textContent = dropFeasible
+    ? 'Axe optique de ' + fmtCm1(ceil - maxDrop) + ' à ' + fmtCm1(ceil - recommendedDrop) + ' du sol'
+    : 'Aucune position compatible (lens shift et faisceau)';
+  $('pantographNeed').textContent = fmtCm1(pantographNeed);
+  if (selectedPantograph){
+    $('pantographSub').textContent = selectedPantograph.sku + ' · écart actuel plafond→platine : ' + fmtCm1(pantographCurrent) +
+      ' (repli mini ' + fmtCm1(selectedPantograph.folded) + ', course ' + selectedPantograph.course + ' m)';
+  } else {
+    $('pantographSub').textContent = 'Position actuelle estimée ' + fmtCm1(pantographCurrent) + ' · variante minimale : ' +
+      (minimumPantograph ? minimumPantograph.course + ' m (' + minimumPantograph.sku + ')' : 'aucune des variantes 1–4 m');
+  }
+
+  let vi = '<div class="note">Projecteur à l’endroit sur pantographe. L’offset natif Optoma de 50 % place l’axe optique au milieu de l’image en position neutre ; le lens shift ±55 % est calculé autour de cette position. Le haut de toile est à la sous-face de l\'imposte, et le faisceau est contrôlé à la façade, ' + fmtCm1(recess) + ' devant la toile.</div>';
+  if (shiftOK){
+    vi += '<div class="okbox">✅ Le haut de toile à ' + fmtCm1(topImage) + ' est dans la plage du lens shift : ' +
+      (shiftPct >= 0 ? '+' : '') + shiftPct.toFixed(1).replace('.', ',') + ' % requis (' + (shiftPct > 0 ? 'vers le haut' : shiftPct < 0 ? 'vers le bas' : 'neutre') + ', limite ±55 %).</div>';
+  } else {
+    vi += '<div class="errbox">⚠️ Pour placer le haut de toile à ' + fmtCm1(topImage) + ', il faudrait ' +
+      shiftPct.toFixed(1).replace('.', ',') + ' % de lens shift ; la limite est ±55 %. Modifie la hauteur plafond→lentille ou la taille d\'image.</div>';
+  }
+  if (Math.abs(shiftPct) >= 50 && Math.abs(shiftPct) <= 55 && Math.abs(suggestedDrop - lensDrop) > 0.005){
+    vi += '<div class="warnbox">⚠️ Le réglage requis est proche de la limite mécanique du lens shift (' + shiftPct.toFixed(1).replace('.', ',') + ' % sur ±55 %). À ' + fmtCm1(suggestedDrop) + ' sous le plafond, le shift serait ' + suggestedShiftPct.toFixed(1).replace('.', ',') + ' %.</div>';
+  }
+  if (selectedPantograph && (pantographNeed > selectedPantograph.max || pantographNeed < selectedPantograph.folded)){
+    vi += '<div class="errbox">⛔ La distance plafond→platine requise (' + fmtCm1(pantographNeed) + ') est hors de la plage de ' + selectedPantograph.sku + ' (' + fmtCm1(selectedPantograph.folded) + ' à ' + fmtCm1(selectedPantograph.max) + '). Choisis une autre course, ou vérifie l’encombrement réel de la platine et du projecteur.</div>';
+  } else if (selectedPantograph){
+    vi += '<div class="okbox">✅ La position plafond→platine de ' + fmtCm1(pantographNeed) + ' est dans la plage de ' + selectedPantograph.sku + ' (' + fmtCm1(selectedPantograph.folded) + ' à ' + fmtCm1(selectedPantograph.max) + ').</div>';
+  } else {
+    vi += '<div class="note">La fiche propose des courses de 1, 2, 3 ou 4 m. Pour la position recommandée, la platine basse doit se trouver à ' + fmtCm1(pantographNeed) + ' du plafond ; la variante minimale compatible est ' + (minimumPantograph ? minimumPantograph.course + ' m (' + minimumPantograph.sku + ')' : 'au-delà de 4 m') + '.</div>';
+  }
+  if (beamGap < -0.0005){
+    vi += '<div class="errbox">⛔ Le rayon supérieur traverse le volume de l\'imposte : il manque ' + fmtCm1(-beamGap) +
+      ' de dégagement à la façade. Descends le projecteur, augmente le retrait toile/façade, ou réduis la taille d’image.</div>';
+  } else if (Math.min(beamGapNear, beamGapFar) < -0.0005){
+    vi += '<div class="warnbox">⚠️ Au ratio choisi le faisceau passe sous l\'imposte, mais à l’autre extrémité de la plage de zoom il serait coupé (' + fmtCm1(Math.min(beamGapNear, beamGapFar)) + ' à la façade). Descends l’axe optique à au moins ' + fmtCm1(recommendedDrop) + ' du plafond, ou vérifie au ratio réellement utilisé.</div>';
+  } else if (!dropFeasible){
+    vi += '<div class="errbox">⛔ Aucune position du projecteur ne permet de respecter à la fois le lens shift (±55 %) et le passage du faisceau sous l\'imposte. Réduis la taille d’image, abaisse le haut de toile, ou augmente le retrait de la toile.</div>';
+  } else {
+    vi += '<div class="okbox">✅ Le faisceau passe sous l\'imposte sur toute la plage de zoom.</div>';
+  }
+  if (topImage <= 0 || bottomImage < 0){
+    vi += '<div class="errbox">⚠️ Les dimensions configurées placent une partie de la toile sous le sol. Vérifie la hauteur du plafond, l\'imposte et la taille de l\'image.</div>';
+  }
+  $('vertInfo').innerHTML = vi;
+
+  /* -- Schéma -- */
+  const geometry = { W, H, dMin, dMax, selectedD, ratio, ceil, soffit, recess, lensDrop, lensZ, topImage, bottomImage, centerImage, shiftPct, shiftOK, beamGap, roomDepth, screenFromWall, lensToWallSelected, rearToWallSelected };
+  drawSide(geometry);
+  $('ratioSub').textContent = 'À ' + ratio.toFixed(2).replace('.', ',') + ':1 → lentille → toile ' + fmtM(selectedD) +
+    ' · arrière du projecteur → mur du fond ' + fmtM(rearToWallSelected) + '.';
+  $('schemaCap').textContent = 'Vue de côté à l’échelle de la pièce (mur du fond à gauche, mur côté meuble à droite). Projecteur à l’endroit sur le pantographe ; toile en retrait de 5 cm derrière la façade de l\'imposte. Cotes sous le sol : lentille → toile, lentille → mur du fond, arrière du projecteur → mur du fond. La cote verticale près du projecteur est la distance plafond → axe optique.';
+
+  return { W, H, Dm, panelW, dMin, dMax, selectedD, ratio, ceil, soffit, recess, lensDrop, lensZ, topImage, bottomImage, centerImage, shiftPct, shiftOK, beamGap, recommendedDrop, dropFeasible, pantographNeed, pantographCurrent, pantographCourse, recommendedShiftPct, roomDepth, fasciaDepth, screenFromWall, lensToWallNear, lensToWallFar, rearToWallNear, rearToWallFar };
+}
+
+/* ---------- Schéma vue de côté ---------- */
+function drawSide(r){
+  const svg = $('schema');
+  const VW = 880, VH = 384;
+  const floorY = 296, topPad = 22, xBackWall = 54, xScreenWall = 800;
+  const roomDepth = Math.max(r.roomDepth, 0.5);
+  const scaleX = (xScreenWall - xBackWall) / roomDepth;
+  const maxH = Math.max(r.ceil, r.topImage, r.lensZ, 0.5) + 0.05;
+  const scaleY = (floorY - topPad) / maxH;
+  const scale = Math.min(scaleX, scaleY);
+
+  const xScreen = xBackWall + Math.max(0, roomDepth - r.screenFromWall) * scale;
+  const xFacade = xScreen - Math.max(0, r.recess) * scale;
+  const xProjFront = Math.max(xBackWall + 6, xScreen - r.selectedD * scale);
+  const bodyDepth = PROJ_DEPTH * scale;
+  const bodyH = (PROJ_H / 1000) * scale;
+  const xProjRear = xProjFront - bodyDepth;
+  const yCeil = floorY - r.ceil * scale;
+  const yLens = floorY - r.lensZ * scale;
+  const yBodyTop = yLens - bodyH / 2;
+  const yBodyBottom = yLens + bodyH / 2;
+  const yImgTop = floorY - r.topImage * scale;
+  const yImgBottom = floorY - r.bottomImage * scale;
+  const xRaySpan = Math.max(1, xScreen - xProjFront);
+  const yRayAtFacade = yLens + (yImgTop - yLens) * ((xFacade - xProjFront) / xRaySpan);
+  const P = SVG_THEMES[state.theme] || SVG_THEMES.dark;
+  const T = 'paint-order:stroke;stroke:#0b0e13;stroke-width:3.5px;stroke-linejoin:round';
+  const okColor = r.beamGap >= 0 ? P.ok : P.bad;
+
+  // Cote horizontale (trait + deux repères + libellé centré).
+  const dimH = (x1, x2, y, label, color) => {
+    const a = Math.min(x1, x2), b = Math.max(x1, x2);
+    return '<line x1="' + a + '" y1="' + y + '" x2="' + b + '" y2="' + y + '" stroke="' + color + '" stroke-width="1.5"/>' +
+      '<line x1="' + a + '" y1="' + (y-5) + '" x2="' + a + '" y2="' + (y+5) + '" stroke="' + color + '" stroke-width="1.5"/>' +
+      '<line x1="' + b + '" y1="' + (y-5) + '" x2="' + b + '" y2="' + (y+5) + '" stroke="' + color + '" stroke-width="1.5"/>' +
+      '<text x="' + ((a+b)/2) + '" y="' + (y+14) + '" fill="' + color + '" font-size="10.5" text-anchor="middle" style="' + T + '">' + label + '</text>';
+  };
+
+  let s = '';
+  s += '<defs><linearGradient id="beam" gradientUnits="userSpaceOnUse" x1="' + xProjFront + '" y1="' + yLens + '" x2="' + xScreen + '" y2="' + ((yImgBottom + yImgTop)/2) + '">' +
+       '<stop offset="0" stop-color="#4d9dff" stop-opacity="0.07"/><stop offset="1" stop-color="#4d9dff" stop-opacity="0.38"/></linearGradient></defs>';
+
+  // sol et plafond
+  s += '<line x1="16" y1="' + floorY + '" x2="' + (VW-16) + '" y2="' + floorY + '" stroke="#5a657a" stroke-width="2"/>';
+  s += '<text x="20" y="' + (floorY-6) + '" fill="#a7b0c0" font-size="11" style="' + T + '">sol</text>';
+  s += '<line x1="16" y1="' + yCeil + '" x2="' + (VW-16) + '" y2="' + yCeil + '" stroke="#3a445a" stroke-width="1.5" stroke-dasharray="6 5"/>';
+  s += '<text x="20" y="' + (yCeil-5) + '" fill="#a7b0c0" font-size="11" style="' + T + '">plafond ' + fmtCm(r.ceil) + '</text>';
+
+  // Les deux murs
+  s += '<line x1="' + xBackWall + '" y1="' + yCeil + '" x2="' + xBackWall + '" y2="' + floorY + '" stroke="#6b7688" stroke-width="2.5"/>';
+  s += '<line x1="' + xScreenWall + '" y1="' + yCeil + '" x2="' + xScreenWall + '" y2="' + floorY + '" stroke="#6b7688" stroke-width="2.5"/>';
+  const yMidRoom = (yCeil + floorY) / 2;
+  s += '<text x="' + (xBackWall+13) + '" y="' + yMidRoom + '" fill="#a7b0c0" font-size="10" text-anchor="middle" transform="rotate(-90 ' + (xBackWall+13) + ' ' + yMidRoom + ')" style="' + T + '">mur du fond</text>';
+  s += '<text x="' + (xScreenWall-13) + '" y="' + yMidRoom + '" fill="#a7b0c0" font-size="10" text-anchor="middle" transform="rotate(-90 ' + (xScreenWall-13) + ' ' + yMidRoom + ')" style="' + T + '">mur côté meuble</text>';
+
+  // Faisceau (avant l'imposte pour que la façade masque les rayons bloqués)
+  s += '<polygon points="' + xProjFront + ',' + yLens + ' ' + xScreen + ',' + yImgBottom + ' ' + xScreen + ',' + yImgTop + '" fill="url(#beam)"/>';
+  s += '<line x1="' + xProjFront + '" y1="' + yLens + '" x2="' + xScreen + '" y2="' + yImgBottom + '" stroke="#4d9dff" stroke-width="1.1" opacity="0.7"/>';
+  s += '<line x1="' + xProjFront + '" y1="' + yLens + '" x2="' + xScreen + '" y2="' + yImgTop + '" stroke="#4d9dff" stroke-width="1.1" opacity="0.7"/>';
+
+  // Imposte (plafond → sous-face), contre le mur côté meuble
+  s += '<rect x="' + xFacade + '" y="' + yCeil + '" width="' + Math.max(3, xScreenWall - xFacade) + '" height="' + Math.max(2, yImgTop - yCeil) + '" fill="#76512b" stroke="#ffb020" stroke-width="1.3" opacity="0.94"/>';
+  s += '<text x="' + ((xFacade+xScreenWall)/2) + '" y="' + (yCeil-6) + '" fill="#ffcf7a" font-size="10" text-anchor="middle" style="' + T + '">hauteur imposte ' + fmtCm(r.soffit) + '</text>';
+
+  // Toile
+  s += '<line x1="' + xScreen + '" y1="' + yImgTop + '" x2="' + xScreen + '" y2="' + yImgBottom + '" stroke="#4d9dff" stroke-width="6" stroke-linecap="round"/>';
+
+  // Contrôle du rayon supérieur à la façade + retrait de la toile
+  s += '<line x1="' + xFacade + '" y1="' + yImgTop + '" x2="' + xFacade + '" y2="' + yRayAtFacade + '" stroke="' + okColor + '" stroke-width="3"/>';
+  s += '<circle cx="' + xFacade + '" cy="' + yRayAtFacade + '" r="3.5" fill="' + okColor + '"/>';
+  s += '<text x="' + (xFacade-6) + '" y="' + (yImgTop+15) + '" fill="#ffcf7a" font-size="9.5" text-anchor="end" style="' + T + '">retrait ' + fmtCm1(r.recess) + '</text>';
+
+  // Axe optique
+  s += '<line x1="' + xProjFront + '" y1="' + yLens + '" x2="' + xScreen + '" y2="' + yLens + '" stroke="#ffb020" stroke-width="1.1" stroke-dasharray="5 4"/>';
+  s += '<text x="' + (xProjFront+8) + '" y="' + (yLens-6) + '" fill="#ffb020" font-size="10" style="' + T + '">axe optique</text>';
+
+  // Projecteur à l'endroit sur la platine basse du pantographe
+  const cxBody = xProjFront - bodyDepth/2;
+  s += '<rect x="' + xProjRear + '" y="' + yBodyTop + '" width="' + bodyDepth + '" height="' + bodyH + '" fill="#2a3449" rx="3"/>';
+  s += '<rect x="' + (xProjFront-5) + '" y="' + (yLens-4) + '" width="7" height="8" fill="#c8ffe9" rx="1"/>';
+  s += '<rect x="' + (cxBody-16) + '" y="' + (yCeil-4) + '" width="32" height="6" fill="#2a3449" rx="2"/>';
+  s += '<line x1="' + (cxBody-bodyDepth*0.30) + '" y1="' + (yCeil+2) + '" x2="' + (cxBody+bodyDepth*0.30) + '" y2="' + yBodyTop + '" stroke="#71809a" stroke-width="2.5"/>';
+  s += '<line x1="' + (cxBody+bodyDepth*0.30) + '" y1="' + (yCeil+2) + '" x2="' + (cxBody-bodyDepth*0.30) + '" y2="' + yBodyTop + '" stroke="#71809a" stroke-width="2.5"/>';
+  s += '<text x="' + cxBody + '" y="' + (yBodyBottom+13) + '" fill="#a7b0c0" font-size="9.5" text-anchor="middle" style="' + T + '">VP à l’endroit · pantographe</text>';
+
+  // Cote hauteur d'image (à droite du mur côté meuble)
+  const xH = xScreenWall + 26;
+  s += '<line x1="' + xH + '" y1="' + yImgTop + '" x2="' + xH + '" y2="' + yImgBottom + '" stroke="#7c5cff" stroke-width="1.8"/>';
+  s += '<line x1="' + (xH-5) + '" y1="' + yImgTop + '" x2="' + (xH+5) + '" y2="' + yImgTop + '" stroke="#7c5cff" stroke-width="1.8"/>';
+  s += '<line x1="' + (xH-5) + '" y1="' + yImgBottom + '" x2="' + (xH+5) + '" y2="' + yImgBottom + '" stroke="#7c5cff" stroke-width="1.8"/>';
+  s += '<text x="' + (xH+12) + '" y="' + ((yImgTop+yImgBottom)/2) + '" fill="#c3b6ff" font-size="10" text-anchor="middle" transform="rotate(-90 ' + (xH+12) + ' ' + ((yImgTop+yImgBottom)/2) + ')" style="' + T + '">hauteur image ' + fmtCm(r.H) + '</text>';
+
+  // Cote haut de toile → sol
+  const xTop = xScreen - 62;
+  s += '<line x1="' + xTop + '" y1="' + yImgTop + '" x2="' + xTop + '" y2="' + floorY + '" stroke="#2bd67b" stroke-width="1.3" stroke-dasharray="4 3"/>';
+  s += '<text x="' + (xTop-5) + '" y="' + ((yImgTop+floorY)/2) + '" fill="#7ff0b4" font-size="10" text-anchor="middle" transform="rotate(-90 ' + (xTop-5) + ' ' + ((yImgTop+floorY)/2) + ')" style="' + T + '">haut de toile ' + fmtCm(r.topImage) + '</text>';
+
+  // Cote plafond → axe optique
+  const xDrop = xProjRear - 28;
+  s += '<line x1="' + xDrop + '" y1="' + yCeil + '" x2="' + xDrop + '" y2="' + yLens + '" stroke="#ffb020" stroke-width="1.3" stroke-dasharray="4 3"/>';
+  s += '<line x1="' + (xDrop-4) + '" y1="' + yCeil + '" x2="' + (xDrop+4) + '" y2="' + yCeil + '" stroke="#ffb020" stroke-width="1.3"/>';
+  s += '<line x1="' + (xDrop-4) + '" y1="' + yLens + '" x2="' + (xDrop+4) + '" y2="' + yLens + '" stroke="#ffb020" stroke-width="1.3"/>';
+  s += '<text x="' + (xDrop-7) + '" y="' + ((yCeil+yLens)/2 + 3.5) + '" fill="#ffcf7a" font-size="10" text-anchor="end" style="' + T + '">' + fmtCm(r.lensDrop) + '</text>';
+
+  // Cotes horizontales : lentille → mur du fond, arrière → mur du fond, lentille → toile
+  const yRow1 = floorY + 26, yRow2 = floorY + 52;
+  s += dimH(xProjFront, xScreen, yRow1, 'lentille → toile ' + fmtM(r.selectedD), '#8fc0ff');
+  s += dimH(xBackWall, xProjFront, yRow1, 'lentille → mur du fond ' + fmtM(r.lensToWallSelected), '#8fc0ff');
+  s += dimH(xBackWall, xProjRear, yRow2, 'arrière du projecteur → mur du fond ' + fmtM(r.rearToWallSelected), '#8fc0ff');
+
+  // En thème clair : on remplace les couleurs « sombres » figées du dessin par la palette claire.
+  if (P !== SVG_THEMES.dark){
+    const swap = {
+      '#0b0e13':P.stroke, '#5a657a':P.floor, '#3a445a':P.ceil, '#6b7688':P.wall, '#a7b0c0':P.label,
+      '#4d9dff':P.beam, '#76512b':P.imposteFill, '#ffb020':P.warn, '#ffcf7a':P.imposteText,
+      '#2a3449':P.projFill, '#c8ffe9':P.lens, '#71809a':P.projArm, '#7c5cff':P.dim2,
+      '#c3b6ff':P.dim2Text, '#2bd67b':P.dim3, '#7ff0b4':P.dim3Text, '#8fc0ff':P.dim1, '#ff5d5d':P.bad
+    };
+    Object.keys(swap).forEach(k => { s = s.split(k).join(swap[k]); });
+  }
+  svg.innerHTML = s;
+}
+
+/* ---------- Récap ---------- */
+$('btnCopy').onclick = async () => {
+  const r = calc();
+  const pantographMin = PANTOGRAPH_MODELS.find(model => r.pantographNeed >= model.folded && r.pantographNeed <= model.max);
+  const txt =
+    'Optoma ZU820T — ' + Math.round(state.diagIn) + '″ ' + state.aspect + ' (' + fmtCm(r.W) + ' × ' + fmtCm(r.H) + ')\n' +
+    '- Distance lentille -> toile : ' + fmtM(r.dMin) + ' à ' + fmtM(r.dMax) + ' ; ratio choisi ' + r.ratio.toFixed(2) + ':1 = ' + fmtM(r.selectedD) + '\n' +
+    '- Arrière projecteur -> toile : environ ' + fmtM(r.dMin + PROJ_DEPTH) + ' à ' + fmtM(r.dMax + PROJ_DEPTH) + ' ; au ratio choisi ' + fmtM(r.selectedD + PROJ_DEPTH) + '\n' +
+    '- Lentille -> mur du fond : ' + fmtM(r.lensToWallNear) + ' à ' + fmtM(r.lensToWallFar) + ' ; arrière du projecteur -> mur du fond : ' + fmtM(r.rearToWallNear) + ' à ' + fmtM(r.rearToWallFar) + ' (salle de ' + fmtM(r.roomDepth) + ', toile à ' + fmtCm(r.screenFromWall) + ' du mur côté meuble) \n' +
+    '- Plafond -> axe lentille : ' + fmtCm1(r.lensDrop) + ' ; axe à ' + fmtCm1(r.lensZ) + ' du sol\n' +
+    '- Haut toile : ' + fmtCm1(r.topImage) + ' du sol ; bas toile : ' + fmtCm1(r.bottomImage) + '\n' +
+    '- Lens shift vertical requis pour le haut de toile : ' + r.shiftPct.toFixed(1) + ' % (' + (r.shiftPct > 0 ? 'vers le haut' : r.shiftPct < 0 ? 'vers le bas' : 'neutre') + ', limite ±55 %)\n' +
+    '- Position d\'axe optique conseillée : ' + (r.dropFeasible ? fmtCm1(r.recommendedDrop) + ' sous plafond' : 'aucune position compatible avec le dégagement du faisceau') + '\n' +
+    '- Plafond -> platine basse du pantographe : ' + fmtCm1(r.pantographNeed) + ' (variante minimale ' + (pantographMin ? pantographMin.sku + ', course ' + pantographMin.course + ' m' : 'aucune variante 1-4 m') + ')';
+  try {
+    await navigator.clipboard.writeText(txt);
+    $('btnCopy').textContent = 'Copié ✓';
+    setTimeout(() => $('btnCopy').textContent = 'Copier le récap', 1500);
+  } catch(e){ prompt('Copie ce récap :', txt); }
+};
+
+/* ---------- Thème clair / sombre ---------- */
+function applyTheme(theme){
+  state.theme = (theme === 'dark') ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', state.theme);
+  document.querySelectorAll('#themeSeg button').forEach(b => b.classList.toggle('active', b.dataset.theme === state.theme));
+  try { localStorage.setItem('zu820t-theme', state.theme); } catch(e){}
+  calc();
+}
+document.querySelectorAll('#themeSeg button').forEach(b => {
+  b.onclick = () => applyTheme(b.dataset.theme);
+});
+
+/* ---------- Export du schéma (SVG / PNG) ---------- */
+function schemaSVGMarkup(){
+  const svg = $('schema');
+  const clone = svg.cloneNode(true);
+  clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  const vb = (svg.getAttribute('viewBox') || '0 0 880 384').trim().split(/\s+/).map(Number);
+  const w = vb[2], h = vb[3];
+  clone.setAttribute('width', w);
+  clone.setAttribute('height', h);
+  const P = SVG_THEMES[state.theme] || SVG_THEMES.dark;
+  const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  bg.setAttribute('x', vb[0]); bg.setAttribute('y', vb[1]);
+  bg.setAttribute('width', w); bg.setAttribute('height', h);
+  bg.setAttribute('fill', P.bg);
+  clone.insertBefore(bg, clone.firstChild);
+  return { markup: '<?xml version="1.0" encoding="UTF-8"?>\n' + new XMLSerializer().serializeToString(clone), w: w, h: h, bg: P.bg };
+}
+function downloadBlob(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1500);
+}
+$('btnSvg').onclick = () => {
+  downloadBlob(new Blob([schemaSVGMarkup().markup], { type: 'image/svg+xml;charset=utf-8' }), 'optoma-zu820t-schema.svg');
+};
+$('btnPng').onclick = () => {
+  const info = schemaSVGMarkup();
+  const scale = 2;
+  const img = new Image();
+  const url = URL.createObjectURL(new Blob([info.markup], { type: 'image/svg+xml;charset=utf-8' }));
+  img.onload = () => {
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(info.w * scale); canvas.height = Math.round(info.h * scale);
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = info.bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(b => {
+        URL.revokeObjectURL(url);
+        if (b) downloadBlob(b, 'optoma-zu820t-schema.png'); else $('btnSvg').click();
+      }, 'image/png');
+    } catch(e){ URL.revokeObjectURL(url); $('btnSvg').click(); }
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); $('btnSvg').click(); };
+  img.src = url;
+};
+
+/* ---------- Init ---------- */
+let savedTheme = 'light';
+try { savedTheme = localStorage.getItem('zu820t-theme') || 'light'; } catch(e){}
+applyTheme(savedTheme);
+setSize(121.7);
+</script>
+</body>
+</html>

@@ -3,411 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%2300d1a1'/%3E%3C/svg%3E">
-<title>Hisense L9Q — Calculateur d'offset vertical</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%234d9dff'/%3E%3C/svg%3E">
+<title>Calculateurs de vidéoprojection</title>
 <style>
   :root{
-    --bg:#0f1115; --card:#1a1e26; --card2:#222836; --text:#f2f4f8; --muted:#a7b0c0;
-    --accent:#00d1a1; --accent2:#4d7cff; --warn:#ffb020; --danger:#ff5d5d;
-    --radius:16px;
+    --bg:#f3f5f9; --card:#ffffff; --text:#111827; --muted:#5b6472; --border:#e3e8ef;
+    --accent:#2563eb; --accent2:#6d28d9; --ok:#047857;
+    --shadow:0 1px 2px rgba(15,23,42,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0f1115; --card:#1a1e26; --text:#f2f4f8; --muted:#a7b0c0; --border:#2b3242;
+      --accent:#4d9dff; --accent2:#7c5cff; --ok:#2bd67b;
+      --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
-  header{padding:20px 16px 8px;max-width:720px;margin:0 auto}
-  header h1{font-size:1.35rem;margin:0 0 4px}
-  header p{margin:0;color:var(--muted);font-size:.95rem}
-  main{max-width:720px;margin:0 auto;padding:12px 16px 48px;display:flex;flex-direction:column;gap:14px}
-  .card{background:var(--card);border:1px solid #2b3242;border-radius:var(--radius);padding:16px}
-  .card h2{font-size:1rem;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:var(--muted)}
-  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  label{font-size:.9rem;color:var(--muted)}
-  input[type=number]{width:100%;padding:12px;border-radius:12px;border:1px solid #333c50;background:#10141b;color:var(--text);font-size:1.1rem}
-  input[type=range]{width:100%;height:44px;accent-color:var(--accent)}
-  .presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .presets button{flex:1 1 auto;min-width:64px;padding:10px 8px;border-radius:999px;border:1px solid #33405a;background:#121722;color:var(--text);font-size:.95rem;cursor:pointer}
-  .presets button.active{background:var(--accent);border-color:var(--accent);color:#06281f;font-weight:700}
-  .big{font-size:2rem;font-weight:800;margin:2px 0}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-  @media(max-width:480px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}}
-  .kpi{background:var(--card2);border-radius:12px;padding:12px}
-  .kpi .v{font-size:1.4rem;font-weight:800}
-  .kpi .u{font-size:.85rem;color:var(--muted)}
-  .kpi small{color:var(--muted);display:block;margin-top:2px;font-size:.8rem}
-  .highlight{border:2px solid var(--accent);background:#12261f}
-  .warnbox{border-left:4px solid var(--warn);background:#27200f;padding:10px 12px;border-radius:8px;font-size:.9rem}
-  .okbox{border-left:4px solid var(--accent);background:#10241d;padding:10px 12px;border-radius:8px;font-size:.9rem}
-  svg{width:100%;height:auto;background:#0b0e13;border-radius:12px;border:1px solid #2a3346}
-  .foot{color:var(--muted);font-size:.8rem}
-  button.copy{padding:10px 14px;border-radius:10px;border:0;background:var(--accent2);color:white;font-weight:600;cursor:pointer;width:100%;font-size:1rem}
-  .tabs{display:flex;background:#121722;border-radius:12px;padding:4px;gap:4px}
-  .tabs button{flex:1;padding:10px;border:0;border-radius:8px;background:transparent;color:var(--muted);font-size:.95rem;cursor:pointer}
-  .tabs button.active{background:#2a3449;color:white;font-weight:700}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+  header{padding:40px 20px 10px;max-width:760px;margin:0 auto}
+  header h1{font-size:1.65rem;margin:0 0 6px;letter-spacing:-.01em}
+  header p{margin:0;color:var(--muted);font-size:.98rem}
+  main{max-width:760px;margin:0 auto;padding:18px 20px 64px;display:flex;flex-direction:column;gap:16px}
+  .card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow);transition:transform .12s ease, border-color .12s ease}
+  .card:hover{transform:translateY(-2px);border-color:var(--accent)}
+  .card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+  .tag{display:inline-block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:2px 10px;margin-bottom:10px}
+  .card h2{font-size:1.25rem;margin:0 0 6px}
+  .card p{margin:0 0 12px;color:var(--muted);font-size:.94rem}
+  .specs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+  .specs span{font-size:.8rem;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:3px 10px}
+  .go{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--accent);font-size:.95rem}
+  .go::after{content:"→";transition:transform .12s ease}
+  .card:hover .go::after{transform:translateX(3px)}
+  footer{color:var(--muted);font-size:.82rem;text-align:center;padding-top:10px}
+  footer a{color:var(--accent)}
 </style>
 </head>
 <body>
 <header>
-  <h1>Hisense L9Q — Offset vertical</h1>
-  <p>Décalage entre le bas de l'image et la lentille / le meuble. 80″ → 200″. 100% hors-ligne, mobile + desktop.</p>
+  <h1>Calculateurs de vidéoprojection</h1>
+  <p>Outils d'implantation pour vidéoprojecteurs. Tout se calcule dans le navigateur — aucune donnée n'est envoyée.</p>
 </header>
 <main>
-  <section class="card">
-    <h2>1 · Taille d'image</h2>
-    <div class="row" style="justify-content:space-between">
-      <label for="diag">Diagonale (curseur) : <strong id="diagLabel" style="color:#fff">120″</strong></label>
-      <span id="dimLabel" style="color:var(--muted);font-size:.9rem"></span>
+  <a class="card" href="l9q-vertical-offset.html">
+    <span class="tag">Offset vertical · ultra courte focale</span>
+    <h2>Hisense L9Q</h2>
+    <p>Décalage entre le bas de l'image et la lentille / le meuble, placement du caisson et dimensions du meuble à fabriquer.</p>
+    <div class="specs">
+      <span>Écran 80″ → 200″</span>
+      <span>Offset lentille → bas d'image</span>
+      <span>Meuble sur mesure</span>
     </div>
-    <input id="diag" type="range" min="60" max="250" step="1" value="120">
-    <div class="presets" id="presets">
-      <button data-d="80">80″</button>
-      <button data-d="100">100″</button>
-      <button data-d="110">110″</button>
-      <button data-d="120" class="active">120″</button>
-      <button data-d="139">139″</button>
-      <button data-d="150">150″</button>
-      <button data-d="200">200″</button>
-    </div>
-    <div style="height:12px"></div>
-    <label>Saisie directe (16:9 — les 3 champs sont liés) :</label>
-    <div style="height:6px"></div>
-    <div class="grid3">
-      <div><label for="diagNum">Diagonale (″)</label><input id="diagNum" type="number" inputmode="decimal" min="60" max="250" step="1" value="120"></div>
-      <div><label for="widthNum">Largeur (cm)</label><input id="widthNum" type="number" inputmode="decimal" min="100" max="500" step="1" value="266"></div>
-      <div><label for="heightNum">Hauteur (cm)</label><input id="heightNum" type="number" inputmode="decimal" min="50" max="300" step="1" value="149"></div>
-    </div>
-    <p class="foot" id="rangeWarn" style="display:none;color:var(--warn)">⚠️ Hors plage officielle 80–200″ : B et A sont extrapolés (à vérifier sur place).</p>
-  </section>
+    <span class="go">Ouvrir le calculateur</span>
+  </a>
 
-  <section class="card">
-    <h2>2 · Ton installation</h2>
-    <div class="tabs" role="tablist">
-      <button id="tabMeuble" class="active">Je connais mon meuble</button>
-      <button id="tabEcran">Je vise un bas d'écran</button>
+  <a class="card" href="zu820t-calculateur.html">
+    <span class="tag">Implantation plafonnière · focale standard</span>
+    <h2>Optoma ZU820T</h2>
+    <p>Distances et tailles d'image, zoom, lens shift, relevé au mur du fond, passage du faisceau sous l'imposte et course du pantographe.</p>
+    <div class="specs">
+      <span>Écran 16:10 · 262 × 164 cm</span>
+      <span>Ratio 1,25–2,0:1</span>
+      <span>Lens shift ±55 % / ±25 %</span>
+      <span>Pantographe SVP0501–0504</span>
     </div>
-    <div style="height:12px"></div>
-    <div id="paneMeuble">
-      <label for="meuble">Hauteur du meuble (plateau → sol, en cm)</label>
-      <input id="meuble" type="number" inputmode="decimal" min="0" max="150" step="0.5" value="45">
-    </div>
-    <div id="paneEcran" style="display:none">
-      <label for="basVise">Bas d'écran visé (sol → bas image, en cm)</label>
-      <input id="basVise" type="number" inputmode="decimal" min="0" max="300" step="1" value="90">
-    </div>
-  </section>
+    <span class="go">Ouvrir le calculateur</span>
+  </a>
 
-  <section class="card highlight">
-    <h2 style="color:var(--accent)">★ Résultat demandé — lentille → bas d'image</h2>
-    <div class="big" id="lensOffset">—</div>
-    <div id="lensSub" style="color:var(--muted)"></div>
-  </section>
-
-  <section class="card">
-    <h2>3 · Placement complet</h2>
-    <div class="grid2">
-      <div class="kpi"><div class="u">Meuble → bas d'image (B officiel)</div><div class="v" id="kB">—</div><small>Surface du meuble → bas de l'image projetée</small></div>
-      <div class="kpi"><div class="u">Bas d'écran / sol</div><div class="v" id="kBas">—</div><small id="kBasSub"></small></div>
-      <div class="kpi"><div class="u">Centre d'écran / sol</div><div class="v" id="kCentre">—</div><small>Idéal œil assis : 105–120 cm</small></div>
-      <div class="kpi"><div class="u">Haut d'écran / sol</div><div class="v" id="kHaut">—</div><small id="kHautSub"></small></div>
-      <div class="kpi"><div class="u">Largeur × hauteur image</div><div class="v" id="kXY" style="font-size:1.1rem">—</div><small>16:9, sans cadre</small></div>
-      <div class="kpi"><div class="u">Recul : dos projecteur → mur (A)</div><div class="v" id="kA">—</div><small>Inclut 3 cm d'épaisseur d'écran</small></div>
-    </div>
-    <div style="height:12px"></div>
-    <div id="confort"></div>
-    <div style="height:12px"></div>
-    <div id="meubleIdealBox" class="warnbox" style="display:none"></div>
-  </section>
-
-  <section class="card">
-    <h2>4 · Meuble à fabriquer (dimensions)</h2>
-    <div class="grid2">
-      <div class="kpi"><div class="u">Largeur du plateau</div><div class="v" id="fW">—</div><small>Projecteur 62,4 cm + 5 cm de chaque côté (mains, ventilation, réglages)</small></div>
-      <div class="kpi"><div class="u">Hauteur du meuble</div><div class="v" id="fH">—</div><small id="fHSub">Rappel du calcul ci-dessus</small></div>
-      <div class="kpi"><div class="u">Profondeur utile du plateau</div><div class="v" id="fP">—</div><small>31,7 cm (projecteur) + 5 cm avant + 5 cm arrière/câbles</small></div>
-      <div class="kpi highlight"><div class="u">Profondeur si meuble collé au mur</div><div class="v" id="fPmur">—</div><small id="fPmurSub"></small></div>
-    </div>
-    <div style="height:12px"></div>
-    <svg id="topview" viewBox="0 0 480 300" aria-label="Schéma vu de dessus"></svg>
-    <p class="foot">Vue de dessus, profondeurs à l'échelle, largeurs schématiques. Le projecteur doit glisser d'avant en arrière de ±5 cm pour affiner la taille d'image : prévois ce jeu dans la profondeur.</p>
-    <div class="warnbox">
-      ⚠️ <strong>Contraintes fab :</strong> 350 W à dissiper → arrière et côtés ouverts ou ajourés (jamais de caisson fermé), 10 cm libres côtés. Plateau parfaitement plan et rigide (12,9 kg + marge → prévoir 25 kg). <strong>Aucun rebord haut</strong> devant/au-dessus de la lentille : le faisceau sort vers le haut. Pieds réglables indispensables (sol jamais plat au mm). Passages : 2× HDMI 2.1, RJ45, alim. Surface mate (pas de laque brillante → reflets).
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>Schéma (vue de côté)</h2>
-    <svg id="schema" viewBox="0 0 480 340" aria-label="Schéma de côté"></svg>
-    <p class="foot">Pas à l'échelle. Mur à droite. Le projecteur (hauteur 16,6 cm) pose sur le meuble, la lumière part vers le haut jusqu'au bas de l'image.</p>
-  </section>
-
-  <section class="card">
-    <button class="copy" id="btnCopy">Copier le récap</button>
-    <p class="foot" id="src">
-      Source : fiche officielle Hisense L9Q « Throw Distance Chart ».<br>
-      Points : 80″ B=29,8cm A=5,7cm · 100″ B=35,4 A=13,7 · 110″ B=38,2 A=17,6 · 120″ B=41,0 A=21,6 · 139″ B=46,3 A=29,2 · 150″ B=49,4 A=33,6 · 200″ B=63,4 A=53,5.<br>
-      Interpolation linéaire entre points. Tolérance ±5% annoncée par Hisense. B = plateau du meuble → bas d'image (avec ~2 cm de cadre écran inclus). Lentille ≈ dessus du projecteur (16,6 cm) → offset lentille = B − 16,6 cm.
-    </p>
-  </section>
+  <footer>Page d'accueil du dépôt <a href="https://github.com/alecgib77/calculateurs-videoprojection">calculateurs-videoprojection</a>.</footer>
 </main>
-
-<script>
-const TABLE = [
-  {d:80,  A:57,  B:298},
-  {d:100, A:137, B:354},
-  {d:110, A:176, B:382},
-  {d:120, A:216, B:410},
-  {d:139, A:292, B:463},
-  {d:150, A:336, B:494},
-  {d:200, A:535, B:634},
-];
-const H_PROJ_MM = 166; // 624 x 317 x 166 mm
-const W_PROJ_MM = 624, D_PROJ_MM = 317;
-const MARGE_COTE = 50, MARGE_AV = 50, MARGE_AR = 50; // marges meuble (mm)
-
-function interp(d){
-  const n=TABLE.length;
-  if(d<TABLE[0].d || d>TABLE[n-1].d){
-    // extrapolation linéaire sur le segment de bord
-    const p0 = d<TABLE[0].d ? TABLE[0] : TABLE[n-2];
-    const p1 = d<TABLE[0].d ? TABLE[1] : TABLE[n-1];
-    const t=(d-p0.d)/(p1.d-p0.d);
-    return {A:p0.A+t*(p1.A-p0.A), B:p0.B+t*(p1.B-p0.B), extrap:true};
-  }
-  for(let i=0;i<n-1;i++){
-    const p0=TABLE[i], p1=TABLE[i+1];
-    if(d>=p0.d && d<=p1.d){
-      const t=(d-p0.d)/(p1.d-p0.d);
-      return {A:p0.A+t*(p1.A-p0.A), B:p0.B+t*(p1.B-p0.B), extrap:false};
-    }
-  }
-  return {A:TABLE[n-1].A, B:TABLE[n-1].B, extrap:true};
-}
-// Conversions 16:9 : W_cm = D_pouces*2.54*16/√337, H_cm = D*2.54*9/√337
-const K16=Math.sqrt(337);
-function diagToWH(D){const dc=D*2.54;return{W:dc*16/K16,H:dc*9/K16};}
-function wToDiag(W){return W/2.54*K16/16;}
-function hToDiag(H){return H/2.54*K16/9;}
-const $ = id => document.getElementById(id);
-const diagEl=$('diag'), diagNumEl=$('diagNum'), widthEl=$('widthNum'), heightEl=$('heightNum');
-const meubleEl=$('meuble'), basViseEl=$('basVise');
-let mode='meuble';
-let syncing=false;
-
-function setSize(D, from){
-  D=Math.round(Math.min(250,Math.max(60,D))*10)/10;
-  if(syncing) return D;
-  syncing=true;
-  diagEl.value=Math.round(D);
-  diagNumEl.value=Math.round(D*10)/10;
-  const {W,H}=diagToWH(D);
-  if(from!=='w') widthEl.value=Math.round(W*10)/10;
-  if(from!=='h') heightEl.value=Math.round(H*10)/10;
-  syncing=false;
-  syncPresets(); calc();
-  return D;
-}
-
-$('tabMeuble').onclick=()=>{mode='meuble';$('tabMeuble').classList.add('active');$('tabEcran').classList.remove('active');$('paneMeuble').style.display='block';$('paneEcran').style.display='none';calc();};
-$('tabEcran').onclick=()=>{mode='ecran';$('tabEcran').classList.add('active');$('tabMeuble').classList.remove('active');$('paneEcran').style.display='block';$('paneMeuble').style.display='none';calc();};
-
-document.querySelectorAll('#presets button').forEach(b=>{
-  b.onclick=()=>{setSize(+b.dataset.d);};
-});
-function syncPresets(){
-  document.querySelectorAll('#presets button').forEach(b=>b.classList.toggle('active', +b.dataset.d===Math.round(+diagEl.value)));
-}
-diagEl.oninput=()=>{setSize(+diagEl.value);};
-diagNumEl.oninput=()=>{const v=parseFloat(diagNumEl.value);if(isFinite(v)) setSize(v);};
-widthEl.oninput=()=>{const v=parseFloat(widthEl.value);if(isFinite(v)&&v>0) setSize(wToDiag(v),'w');};
-heightEl.oninput=()=>{const v=parseFloat(heightEl.value);if(isFinite(v)&&v>0) setSize(hToDiag(v),'h');};
-meubleEl.oninput=calc; basViseEl.oninput=calc;
-
-function fmtCm(mm){return (mm/10).toFixed(1)+' cm';}
-function fmtIn(mm){return (mm/25.4).toFixed(1)+'″';}
-
-function calc(){
-  let D=parseFloat(diagNumEl.value);
-  if(!isFinite(D)) D=+diagEl.value;
-  D=Math.min(250,Math.max(60,D));
-  const {A:Araw,B,extrap}=interp(D);
-  // Sous 80″ l'extrapolation donne un recul négatif (projecteur dans le mur) :
-  // on le borne à 0 et on l'affiche explicitement.
-  const aClampe=Araw<0;
-  const A=aClampe?0:Araw;
-  const diagMm=D*25.4;
-  const W=diagMm*16/Math.sqrt(337);
-  const H=diagMm*9/Math.sqrt(337);
-  const lensMm=B-H_PROJ_MM;
-
-  $('diagLabel').textContent=(Math.round(D*10)/10)+'″';
-  $('dimLabel').textContent=(Math.round(W/10*10)/10)+' × '+(Math.round(H/10*10)/10)+' cm';
-  const warnEl=$('rangeWarn');
-  if(aClampe){
-    warnEl.style.display='block';
-    warnEl.textContent='⚠️ Taille sous la plage officielle : le recul extrapolé serait de '+(Araw/10).toFixed(1)+' cm (négatif = projecteur dans le mur, impossible). A affiché ≈ 0 cm (projecteur contre l\'écran) : à vérifier sur place, ou vise ≥ 80″.';
-  } else {
-    warnEl.style.display=(extrap||D<80||D>200)?'block':'none';
-    warnEl.textContent='⚠️ Hors plage officielle 80–200″ : B et A sont extrapolés (à vérifier sur place).';
-  }
-
-  $('lensOffset').textContent=fmtCm(lensMm)+'  ('+fmtIn(lensMm)+')';
-  $('lensSub').textContent='B − hauteur projecteur = '+fmtCm(B)+' − 16,6 cm. C\'est de combien il faut monter au-dessus de la lentille pour atteindre le bas de l\'image.';
-
-  $('kB').textContent=fmtCm(B)+' · '+fmtIn(B);
-  $('kA').textContent=aClampe?'≈ 0 cm (contre le mur)':fmtCm(A)+' · '+fmtIn(A);
-  $('kXY').textContent=Math.round(W/10)+' × '+Math.round(H/10)+' cm';
-
-  let meubleMm, basMm;
-  if(mode==='meuble'){
-    meubleMm=(parseFloat(meubleEl.value)||0)*10;
-    basMm=meubleMm+B;
-    $('kBas').textContent=fmtCm(basMm);
-    $('kBasSub').textContent='= meuble '+fmtCm(meubleMm)+' + B '+fmtCm(B);
-    $('meubleIdealBox').style.display='none';
-  } else {
-    basMm=(parseFloat(basViseEl.value)||0)*10;
-    meubleMm=basMm-B;
-    $('kBas').textContent=fmtCm(basMm)+' (visé)';
-    $('kBasSub').textContent='meuble idéal = '+fmtCm(meubleMm);
-    const box=$('meubleIdealBox');
-    box.style.display='block';
-    if(meubleMm<0) box.textContent='⚠️ Bas d\'écran visé trop bas pour cette taille : il faudrait un meuble à '+fmtCm(meubleMm)+' (impossible). Vise plus haut ou réduis la taille.';
-    else box.textContent='ℹ️ Pour un bas d\'écran à '+fmtCm(basMm)+', il faut un meuble à '+fmtCm(meubleMm)+' ('+(meubleMm/10).toFixed(0)+' cm). Meubles standards : 35–45 cm.';
-  }
-
-  const centreMm=basMm+H/2, hautMm=basMm+H;
-  $('kCentre').textContent=fmtCm(centreMm);
-  $('kHaut').textContent=fmtCm(hautMm);
-  $('kHautSub').textContent=fmtIn(hautMm)+' · diagonale '+D+'″';
-
-  const c=$('confort');
-  const centreCm=centreMm/10;
-  if(centreCm>=105&&centreCm<=120) c.innerHTML='<div class="okbox">✅ Centre à '+centreCm.toFixed(0)+' cm : parfait pour un canapé (œil assis ~105–115 cm).</div>';
-  else if(centreCm<105) c.innerHTML='<div class="warnbox">👀 Centre à '+centreCm.toFixed(0)+' cm : un peu bas, tu lèveras peu la tête — confortable, vérifie que le projecteur ne gêne pas la vue.</div>';
-  else if(centreCm<=135) c.innerHTML='<div class="warnbox">👀 Centre à '+centreCm.toFixed(0)+' cm : un peu haut. Avec un meuble de '+(meubleMm/10).toFixed(0)+' cm c\'est normal en UST grand format — recule le canapé (≥3 m) pour le confort.</div>';
-  else c.innerHTML='<div class="warnbox">⚠️ Centre à '+centreCm.toFixed(0)+' cm : très haut (nuque). Réduis la taille ou prends un meuble plus bas.</div>';
-
-  // --- 4 · meuble à fabriquer ---
-  const largMiniMm = W_PROJ_MM + 2*MARGE_COTE;          // 724
-  const profUtileMm = D_PROJ_MM + MARGE_AV + MARGE_AR;  // 417
-  const profMurMm = A + D_PROJ_MM + MARGE_AV;           // meuble collé au mur
-  $('fW').textContent = (largMiniMm/10).toFixed(0)+' cm mini · 90 cm conseillé';
-  $('fH').textContent = (meubleMm/10).toFixed(1)+' cm';
-  $('fHSub').textContent = mode==='meuble' ? 'Ta saisie meuble (plateau → sol)' : 'Meuble idéal pour ton bas d\'écran visé';
-  $('fP').textContent = (profUtileMm/10).toFixed(1)+' cm mini';
-  $('fPmur').textContent = (profMurMm/10).toFixed(1)+' cm';
-  $('fPmurSub').textContent = '= A '+(A/10).toFixed(1)+' + 31,7 (projecteur) + 5 marge avant. Arrière du projecteur à A du mur (A inclut 3 cm d\'écran).'+(aClampe?' ⚠️ A extrapolé négatif ramené à 0.':'');
-
-  drawSchema(meubleMm,B,H,A,hautMm);
-  drawTop(A, profMurMm);
-  return {D,A,B,lensMm,W,H,meubleMm,basMm,centreMm,hautMm,largMiniMm,profUtileMm,profMurMm};
-}
-
-function drawTop(A, profMurMm){
-  const svg=$('topview');
-  const T='paint-order:stroke;stroke:#0b0e13;stroke-width:4px;stroke-linejoin:round';
-  const cx=250; // centre
-  const yWall=36, scrD=30; // scrD = épaisseur écran 3 cm en mm
-  // Meuble collé au mur : dos du meuble = mur. Prof = A + 317 + 50.
-  const total=profMurMm+50; // profondeur meuble + air devant (mm)
-  const k=205/total;
-  const yScr0=yWall, yScr1=yWall+scrD*k;
-  const yMeub0=yWall, yMeub1=yWall+profMurMm*k;
-  const yProj0=yMeub0+A*k, yProj1=yProj0+D_PROJ_MM*k;
-  const wScr=440, wMeub=230, wProj=150;
-  const yMidScr=(yScr0+yScr1)/2, beamHalf=wProj/2, scrHalf=150;
-  svg.innerHTML=
-   '<defs><linearGradient id="beamTop" gradientUnits="userSpaceOnUse" x1="'+cx+'" y1="'+yProj0+'" x2="'+cx+'" y2="'+yMidScr+'">'+
-    '<stop offset="0" stop-color="#00d1a1" stop-opacity="0.32"/>'+
-    '<stop offset="1" stop-color="#00d1a1" stop-opacity="0.07"/></linearGradient></defs>'+
-   '<rect x="'+(cx-wMeub/2)+'" y="'+yMeub0+'" width="'+wMeub+'" height="'+Math.max(8,(yMeub1-yMeub0))+'" fill="#2a3449" rx="4"/>'+
-   '<rect x="'+(cx-wProj/2)+'" y="'+yProj0+'" width="'+wProj+'" height="'+Math.max(8,(yProj1-yProj0))+'" fill="#4d7cff" rx="4"/>'+
-   '<line x1="10" y1="'+yWall+'" x2="470" y2="'+yWall+'" stroke="#5a657a" stroke-width="3"/>'+
-   '<text x="240" y="22" fill="#a7b0c0" font-size="12" text-anchor="middle" style="'+T+'">mur (écran 3 cm d\'épaisseur) — meuble collé au mur</text>'+
-   // faisceau APRÈS les meubles (la lumière passe au-dessus du plateau), AVANT l'écran (trait net)
-   '<polygon points="'+(cx-beamHalf)+','+yProj0+' '+(cx+beamHalf)+','+yProj0+' '+(cx+scrHalf)+','+yMidScr+' '+(cx-scrHalf)+','+yMidScr+'" fill="url(#beamTop)"/>'+
-   '<line x1="'+(cx-beamHalf)+'" y1="'+yProj0+'" x2="'+(cx-scrHalf)+'" y2="'+yMidScr+'" stroke="#00d1a1" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.8"/>'+
-   '<line x1="'+(cx+beamHalf)+'" y1="'+yProj0+'" x2="'+(cx+scrHalf)+'" y2="'+yMidScr+'" stroke="#00d1a1" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.8"/>'+
-   '<text x="'+cx+'" y="'+((yProj0+yMidScr)/2)+'" fill="#00d1a1" font-size="11" font-style="italic" text-anchor="middle" opacity="0.9">faisceau</text>'+
-   '<line x1="'+(cx-wScr/2)+'" y1="'+((yScr0+yScr1)/2)+'" x2="'+(cx+wScr/2)+'" y2="'+((yScr0+yScr1)/2)+'" stroke="#00d1a1" stroke-width="5" stroke-linecap="round"/>'+
-   '<text x="'+cx+'" y="'+((yProj0+yProj1)/2+4)+'" fill="white" font-size="12" text-anchor="middle">L9Q 62,4 cm</text>'+
-   '<text x="'+(cx+wMeub/2+8)+'" y="'+((yMeub0+yMeub1)/2)+'" fill="#a7b0c0" font-size="12" style="'+T+'">meuble</text>'+
-   // cotes profondeur à gauche : A = mur -> dos projecteur, meuble = mur -> avant meuble
-   '<line x1="34" y1="'+yWall+'" x2="34" y2="'+yProj0+'" stroke="#ffb020" stroke-width="2"/>'+
-   '<line x1="28" y1="'+yWall+'" x2="40" y2="'+yWall+'" stroke="#ffb020" stroke-width="2"/>'+
-   '<line x1="28" y1="'+yProj0+'" x2="40" y2="'+yProj0+'" stroke="#ffb020" stroke-width="2"/>'+
-   '<text x="28" y="'+((yWall+yProj0)/2)+'" fill="#ffb020" font-size="12" text-anchor="middle" transform="rotate(-90 28 '+((yWall+yProj0)/2)+')" style="'+T+'">A '+(A/10).toFixed(1)+' cm</text>'+
-   '<line x1="58" y1="'+yMeub0+'" x2="58" y2="'+yMeub1+'" stroke="#4d7cff" stroke-width="2"/>'+
-   '<line x1="52" y1="'+yMeub0+'" x2="64" y2="'+yMeub0+'" stroke="#4d7cff" stroke-width="2"/>'+
-   '<line x1="52" y1="'+yMeub1+'" x2="64" y2="'+yMeub1+'" stroke="#4d7cff" stroke-width="2"/>'+
-   '<text x="52" y="'+((yMeub0+yMeub1)/2)+'" fill="#8fa8ff" font-size="12" text-anchor="middle" transform="rotate(-90 52 '+((yMeub0+yMeub1)/2)+')" style="'+T+'">meuble '+(profMurMm/10).toFixed(1)+' cm</text>'+
-   '<text x="'+cx+'" y="'+(yMeub1+18)+'" fill="#a7b0c0" font-size="12" text-anchor="middle" style="'+T+'">canapé / pièce →</text>';
-}
-
-function drawSchema(meubleMm,B,H,A,hautMm){
-  const svg=$('schema');
-  const maxH=Math.max(hautMm,1);
-  const sy=v=>300-(v/maxH)*270; // sol y=300
-  const solY=300;
-  const meubleY=sy(meubleMm);
-  const projTopY=sy(meubleMm+H_PROJ_MM);
-  const basY=sy(meubleMm+B);
-  const hautY=sy(meubleMm+B+H);
-  // positions x : écran à gauche du mur, marges à droite pour les étiquettes
-  const murX=340, ecranX=328;
-  const projX=90, projW=130;
-  const coteB_X=projX-24;
-  const coteL_X=projX+projW+14;
-  const T='paint-order:stroke;stroke:#0b0e13;stroke-width:4px;stroke-linejoin:round';
-  const bCm=(B/10).toFixed(1), lCm=((B-H_PROJ_MM)/10).toFixed(1);
-  const basCm=((meubleMm+B)/10).toFixed(0), hautCm=((meubleMm+B+H)/10).toFixed(0);
-  // étiquette "lentille→bas" : au-dessus du faisceau, à gauche de la cote (évite "bas XX")
-  const labT=((coteL_X-8)-(projX+65))/((ecranX-4)-(projX+65));
-  const labX=coteL_X-8, labY=projTopY+(basY-projTopY)*labT-9;
-  svg.innerHTML=
-   '<defs><linearGradient id="beamSide" gradientUnits="userSpaceOnUse" x1="'+(projX+65)+'" y1="'+projTopY+'" x2="'+ecranX+'" y2="'+((basY+hautY)/2)+'">'+
-    '<stop offset="0" stop-color="#00d1a1" stop-opacity="0.06"/>'+
-    '<stop offset="0.55" stop-color="#00d1a1" stop-opacity="0.25"/>'+
-    '<stop offset="1" stop-color="#00d1a1" stop-opacity="0.45"/></linearGradient></defs>'+
-   // faisceau : cône lentille -> plein écran (bas..haut) + rayons de bord
-   '<polygon points="'+(projX+65)+','+projTopY+' '+(ecranX-4)+','+basY+' '+(ecranX-4)+','+hautY+'" fill="url(#beamSide)"/>'+
-   '<line x1="'+(projX+65)+'" y1="'+projTopY+'" x2="'+(ecranX-4)+'" y2="'+basY+'" stroke="#00d1a1" stroke-width="1.5" opacity="0.75"/>'+
-   '<line x1="'+(projX+65)+'" y1="'+projTopY+'" x2="'+(ecranX-4)+'" y2="'+hautY+'" stroke="#00d1a1" stroke-width="1.5" opacity="0.75"/>'+
-   '<line x1="10" y1="'+solY+'" x2="470" y2="'+solY+'" stroke="#5a657a" stroke-width="2"/>'+
-   '<text x="12" y="'+(solY+18)+'" fill="#a7b0c0" font-size="12" style="'+T+'">sol</text>'+
-   // meuble
-   '<rect x="'+projX+'" y="'+meubleY+'" width="'+projW+'" height="'+Math.max(2,(solY-meubleY))+'" fill="#2a3449" rx="3"/>'+
-   '<text x="'+(projX+projW/2)+'" y="'+(meubleY-6)+'" fill="#a7b0c0" font-size="12" text-anchor="middle" style="'+T+'">meuble '+((meubleMm/10).toFixed(0))+' cm</text>'+
-   // projecteur
-   '<rect x="'+(projX+15)+'" y="'+projTopY+'" width="100" height="'+Math.max(4,(meubleY-projTopY))+'" fill="#4d7cff" rx="4"/>'+
-   '<text x="'+(projX+65)+'" y="'+((meubleY+projTopY)/2+4)+'" fill="white" font-size="12" text-anchor="middle">L9Q</text>'+
-   // (faisceau dessiné en fond, avant les meubles — voir ci-dessus)
-   // écran + mur
-   '<line x1="'+ecranX+'" y1="'+basY+'" x2="'+ecranX+'" y2="'+hautY+'" stroke="#00d1a1" stroke-width="5" stroke-linecap="round"/>'+
-   '<line x1="'+murX+'" y1="20" x2="'+murX+'" y2="'+solY+'" stroke="#3a445a" stroke-width="2" stroke-dasharray="5 4"/>'+
-   '<text x="'+(murX+16)+'" y="165" fill="#a7b0c0" font-size="12" text-anchor="middle" transform="rotate(-90 '+(murX+16)+' 165)" style="'+T+'">mur</text>'+
-   // cote B (à gauche du meuble)
-   '<line x1="'+coteB_X+'" y1="'+meubleY+'" x2="'+coteB_X+'" y2="'+basY+'" stroke="#ffb020" stroke-width="2"/>'+
-   '<line x1="'+(coteB_X-6)+'" y1="'+meubleY+'" x2="'+(coteB_X+6)+'" y2="'+meubleY+'" stroke="#ffb020" stroke-width="2"/>'+
-   '<line x1="'+(coteB_X-6)+'" y1="'+basY+'" x2="'+(coteB_X+6)+'" y2="'+basY+'" stroke="#ffb020" stroke-width="2"/>'+
-   '<text x="'+coteB_X+'" y="'+((meubleY+basY)/2)+'" fill="#ffb020" font-size="12" text-anchor="middle" transform="rotate(-90 '+coteB_X+' '+((meubleY+basY)/2)+')" style="'+T+'">B '+bCm+' cm</text>'+
-   // cote lentille (entre projecteur et écran, étiquette au-dessus du trait)
-   '<line x1="'+coteL_X+'" y1="'+projTopY+'" x2="'+coteL_X+'" y2="'+basY+'" stroke="#ff5d5d" stroke-width="2" stroke-dasharray="4 3"/>'+
-   '<line x1="'+(coteL_X-6)+'" y1="'+projTopY+'" x2="'+(coteL_X+6)+'" y2="'+projTopY+'" stroke="#ff5d5d" stroke-width="2"/>'+
-   '<line x1="'+(coteL_X-6)+'" y1="'+basY+'" x2="'+(coteL_X+6)+'" y2="'+basY+'" stroke="#ff5d5d" stroke-width="2"/>'+
-   '<circle cx="'+(projX+65)+'" cy="'+projTopY+'" r="4" fill="#c8ffe9"/>'+
-   '<text x="'+labX+'" y="'+labY+'" fill="#ff8080" font-size="12" text-anchor="end" style="'+T+'">lentille→bas '+lCm+' cm</text>'+
-   // étiquettes écran placées À GAUCHE de l'écran (plus de dépassement à droite)
-   '<text x="'+(ecranX-10)+'" y="'+(basY+4)+'" fill="#fff" font-size="12" text-anchor="end" style="'+T+'">bas '+basCm+' cm</text>'+
-   '<text x="'+(ecranX-10)+'" y="'+(Math.max(14,hautY)+4)+'" fill="#fff" font-size="12" text-anchor="end" style="'+T+'">haut '+hautCm+' cm</text>';
-}
-
-$('btnCopy').onclick=async()=>{
-  const r=calc();
-  const txt='Hisense L9Q '+(Math.round(r.D*10)/10)+' pouces ('+Math.round(r.W/10)+'x'+Math.round(r.H/10)+' cm)\n- Lentille -> bas image : '+(r.lensMm/10).toFixed(1)+' cm\n- Meuble -> bas image (B) : '+(r.B/10).toFixed(1)+' cm\n- Bas ecran/sol : '+(r.basMm/10).toFixed(1)+' cm (meuble '+(r.meubleMm/10).toFixed(1)+' cm)\n- Centre : '+(r.centreMm/10).toFixed(1)+' cm, Haut : '+(r.hautMm/10).toFixed(1)+' cm\n- Image : '+Math.round(r.W/10)+'x'+Math.round(r.H/10)+' cm, Recul dos->mur : '+(r.A/10).toFixed(1)+' cm\n- Meuble a fabriquer : larg '+(r.largMiniMm/10).toFixed(0)+' cm mini / H '+(r.meubleMm/10).toFixed(1)+' cm / prof '+(r.profUtileMm/10).toFixed(1)+' cm utile, '+(r.profMurMm/10).toFixed(1)+' cm si colle au mur';
-  try{await navigator.clipboard.writeText(txt);$('btnCopy').textContent='Copié ✓';setTimeout(()=>$('btnCopy').textContent='Copier le récap',1500);}catch(e){prompt('Copie ce récap :',txt);}
-};
-
-setSize(120);
-</script>
 </body>
 </html>
